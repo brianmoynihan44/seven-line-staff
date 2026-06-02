@@ -278,6 +278,99 @@ h1 { font-size: 1.55rem; color: #5030bb; margin-bottom: 5px; letter-spacing: 0.0
   color: #5030bb; font-weight: 600; min-height: 22px; transition: opacity 0.4s;
 }
 
+/* Wave Harmony */
+#wavePanel { margin-top: 14px; }
+#waveCanvas { display: block; width: 100%; border-radius: 10px; background: #0a0a14; border: 1px solid #2a2a3a; }
+.wave-note-btn {
+  width: 34px; height: 34px; border-radius: 7px;
+  border: 2.5px solid transparent; cursor: pointer;
+  font-family: monospace; font-size: 0.88rem; font-weight: bold;
+  color: #fff; transition: all 0.13s; flex-shrink: 0;
+}
+.wave-note-btn.active  { border-color: #fff; box-shadow: 0 0 7px rgba(255,255,255,0.45); }
+.wave-note-btn.inactive { opacity: 0.28; }
+.wave-info {
+  margin-top: 10px; padding: 11px 14px;
+  background: #f8f8ff; border-radius: 8px;
+  border-left: 3px solid #c0b0ee;
+  font-size: 0.82rem; color: #555; line-height: 1.7;
+}
+
+/* Piano Roll */
+#rollPanel { margin-top: 14px; }
+
+/* ── History Timeline ── */
+#historyPanel { margin-top: 10px; }
+.hist-intro { font-size: 0.84rem; color: #888; margin-bottom: 18px; text-align: center; line-height: 1.55; }
+.hist-timeline {
+  position: relative;
+  padding-left: 36px;
+  display: flex; flex-direction: column; gap: 0;
+}
+.hist-timeline::before {
+  content:''; position:absolute; left:14px; top:12px; bottom:12px;
+  width:3px; background: linear-gradient(to bottom, #9070dd, #c0a0ff, #ddd4ff);
+  border-radius: 2px;
+}
+.hist-era {
+  position: relative;
+  background: #fff; border: 1.5px solid #e0e0f0;
+  border-radius: 12px; padding: 14px 16px 14px 18px;
+  margin-bottom: 14px; cursor: pointer;
+  transition: box-shadow 0.18s, border-color 0.18s;
+}
+.hist-era:hover { box-shadow: 0 4px 18px rgba(80,60,180,0.12); border-color: #b0a0dd; }
+.hist-era.open { border-color: #7060cc; box-shadow: 0 4px 20px rgba(80,60,180,0.16); }
+.hist-era::before {
+  content:''; position:absolute; left:-27px; top:17px;
+  width:14px; height:14px; border-radius:50%;
+  background: var(--dot-color, #9070dd);
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 2px var(--dot-color, #9070dd);
+}
+.hist-era-head { display:flex; align-items:center; gap:10px; }
+.hist-era-icon { font-size:1.4rem; flex-shrink:0; }
+.hist-era-title { font-size: 0.95rem; font-weight: 700; color: #333355; }
+.hist-era-date  { font-size: 0.75rem; color: #aaa; margin-left: auto; white-space:nowrap; }
+.hist-era-blurb { font-size: 0.82rem; color: #888; margin-top: 3px; }
+.hist-era-body  {
+  display: none; margin-top: 12px; padding-top: 12px;
+  border-top: 1px solid #eee; font-size: 0.85rem; color: #555;
+  line-height: 1.65;
+}
+.hist-era.open .hist-era-body { display: block; }
+.hist-demo-btn {
+  display: inline-block; margin-top: 10px;
+  padding: 5px 13px; border-radius: 7px;
+  background: #f0ecff; border: 1px solid #b0a0dd;
+  color: #5030bb; font-size: 0.8rem; cursor: pointer;
+  transition: background 0.15s;
+}
+.hist-demo-btn:hover { background: #e0d8ff; }
+.hist-fact {
+  margin-top: 8px; padding: 8px 12px;
+  background: #f8f8ff; border-radius: 8px;
+  border-left: 3px solid #9070dd; font-size: 0.82rem; color: #666;
+  font-style: italic;
+}
+.hist-wave-mini {
+  margin-top: 12px; border-radius: 8px; overflow:hidden;
+  background: #111122; display:block;
+}
+.hist-nav { display:flex; justify-content:center; gap:10px; margin-top:4px; flex-wrap:wrap; }
+.hist-nav .btn { font-size:0.78rem; padding:5px 12px; }
+.roll-controls { display: flex; gap: 8px; margin-bottom: 10px; align-items: center; flex-wrap: wrap; }
+#rollCanvas {
+  display: block; width: 100%; border-radius: 10px;
+  background: #111118; cursor: default;
+  border: 1px solid #2a2a3a;
+}
+.roll-loop-label {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 0.78rem; color: #888; cursor: pointer;
+}
+.roll-loop-label input { accent-color: #7060cc; cursor: pointer; }
+
 /* Legend */
 .key-legend {
   margin-top: 20px; display: flex; gap: 16px; justify-content: center;
@@ -302,6 +395,9 @@ h1 { font-size: 1.55rem; color: #5030bb; margin-bottom: 5px; letter-spacing: 0.0
   <button class="tab"         onclick="setMode('play')">⌨️ Play</button>
   <button class="tab"         onclick="setMode('harmonic')">〰️ Overtones</button>
   <button class="tab"         onclick="setMode('share')">💾 Share</button>
+  <button class="tab"         onclick="setMode('waves')">〰 Waves</button>
+  <button class="tab"         onclick="setMode('roll')">🎞 Roll</button>
+  <button class="tab"         onclick="setMode('history')">📜 History</button>
 </div>
 
 <div class="card">
@@ -377,12 +473,49 @@ h1 { font-size: 1.55rem; color: #5030bb; margin-bottom: 5px; letter-spacing: 0.0
     </div>
     <div id="scalesPanel">
       <div class="theory-row">
-        <span class="tlabel">Scale</span>
+        <span class="tlabel">Standard</span>
         <button class="opt-btn active" id="sbt-major"      onclick="selectScale('major')">Major</button>
         <button class="opt-btn"        id="sbt-minor"      onclick="selectScale('minor')">Minor</button>
         <button class="opt-btn"        id="sbt-pentatonic" onclick="selectScale('pentatonic')">Pentatonic</button>
         <button class="opt-btn"        id="sbt-blues"      onclick="selectScale('blues')">Blues</button>
         <button class="opt-btn"        id="sbt-chromatic"  onclick="selectScale('chromatic')">Chromatic</button>
+      </div>
+      <div class="theory-row">
+        <span class="tlabel">Modes</span>
+        <button class="opt-btn" id="sbt-dorian"     onclick="selectScale('dorian')">Dorian</button>
+        <button class="opt-btn" id="sbt-phrygian"   onclick="selectScale('phrygian')">Phrygian</button>
+        <button class="opt-btn" id="sbt-lydian"     onclick="selectScale('lydian')">Lydian</button>
+        <button class="opt-btn" id="sbt-mixolydian" onclick="selectScale('mixolydian')">Mixolydian</button>
+        <button class="opt-btn" id="sbt-locrian"    onclick="selectScale('locrian')">Locrian</button>
+      </div>
+      <div class="theory-row">
+        <span class="tlabel">Minor</span>
+        <button class="opt-btn" id="sbt-harmonic_minor" onclick="selectScale('harmonic_minor')">Harmonic Minor</button>
+        <button class="opt-btn" id="sbt-melodic_minor"  onclick="selectScale('melodic_minor')">Melodic Minor</button>
+        <button class="opt-btn" id="sbt-minor_pent"     onclick="selectScale('minor_pent')">Minor Pentatonic</button>
+      </div>
+      <div class="theory-row">
+        <span class="tlabel">Mel. Minor modes</span>
+        <button class="opt-btn" id="sbt-phrygian_dom"  onclick="selectScale('phrygian_dom')">Phrygian Dom.</button>
+        <button class="opt-btn" id="sbt-lydian_dom"    onclick="selectScale('lydian_dom')">Lydian Dom.</button>
+        <button class="opt-btn" id="sbt-lydian_aug"    onclick="selectScale('lydian_aug')">Lydian Aug.</button>
+        <button class="opt-btn" id="sbt-altered"       onclick="selectScale('altered')">Altered</button>
+        <button class="opt-btn" id="sbt-locrian_nat2"  onclick="selectScale('locrian_nat2')">Locrian ♮2</button>
+        <button class="opt-btn" id="sbt-dorian_b2"     onclick="selectScale('dorian_b2')">Dorian ♭2</button>
+      </div>
+      <div class="theory-row">
+        <span class="tlabel">Symmetric</span>
+        <button class="opt-btn" id="sbt-whole_tone"  onclick="selectScale('whole_tone')">Whole Tone</button>
+        <button class="opt-btn" id="sbt-dim_wh"      onclick="selectScale('dim_wh')">Diminished W–H</button>
+        <button class="opt-btn" id="sbt-dim_hw"      onclick="selectScale('dim_hw')">Diminished H–W</button>
+        <button class="opt-btn" id="sbt-augmented"   onclick="selectScale('augmented')">Augmented</button>
+      </div>
+      <div class="theory-row">
+        <span class="tlabel">World</span>
+        <button class="opt-btn" id="sbt-hungarian_minor"  onclick="selectScale('hungarian_minor')">Hungarian Minor</button>
+        <button class="opt-btn" id="sbt-double_harmonic"  onclick="selectScale('double_harmonic')">Double Harmonic</button>
+        <button class="opt-btn" id="sbt-japanese_pent"    onclick="selectScale('japanese_pent')">Japanese (In)</button>
+        <button class="opt-btn" id="sbt-enigmatic"        onclick="selectScale('enigmatic')">Enigmatic</button>
       </div>
       <div class="theory-row">
         <button class="btn primary" id="scalePlayUpBtn" onclick="playScale('up')">▶ Ascending</button>
@@ -574,6 +707,74 @@ h1 { font-size: 1.55rem; color: #5030bb; margin-bottom: 5px; letter-spacing: 0.0
     <div class="share-toast" id="shareToast"></div>
   </div>
 
+  <!-- Wave Harmony panel -->
+  <div id="wavePanel" style="display:none;margin-top:14px">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap">
+      <span class="tlabel">Notes</span>
+      <div style="display:flex;gap:4px;flex-wrap:wrap" id="waveNoteBtns"></div>
+      <div class="key-divider"></div>
+      <button class="btn primary" onclick="playWaveNotes()">▶ Play</button>
+      <button class="btn" id="waveAnimBtn" onclick="toggleWaveAnim()">〜 Animate</button>
+    </div>
+    <div style="display:flex;gap:5px;margin-bottom:10px;flex-wrap:wrap;align-items:center">
+      <span class="tlabel">Presets</span>
+      <button class="play-ex-btn" onclick="setWavePreset([0,12])">Octave</button>
+      <button class="play-ex-btn" onclick="setWavePreset([0,7])">Perfect 5th</button>
+      <button class="play-ex-btn" onclick="setWavePreset([0,5])">Perfect 4th</button>
+      <button class="play-ex-btn" onclick="setWavePreset([0,4])">Major 3rd</button>
+      <button class="play-ex-btn" onclick="setWavePreset([0,3])">Minor 3rd</button>
+      <button class="play-ex-btn" onclick="setWavePreset([0,9])">Major 6th</button>
+      <button class="play-ex-btn" onclick="setWavePreset([0,6])">Tritone ⚠</button>
+      <button class="play-ex-btn" onclick="setWavePreset([0,1])">Semitone ⚠</button>
+      <button class="play-ex-btn" onclick="setWavePreset([0,2])">Whole Step</button>
+      <button class="play-ex-btn" onclick="setWavePreset([0,4,7])">Major chord</button>
+      <button class="play-ex-btn" onclick="setWavePreset([0,3,7])">Minor chord</button>
+      <button class="play-ex-btn" onclick="setWavePreset([0,4,7,10])">Dom 7th</button>
+    </div>
+    <canvas id="waveCanvas" height="320"></canvas>
+    <div class="wave-info" id="waveInfo"></div>
+  </div>
+
+  <!-- Piano Roll panel -->
+  <div id="rollPanel" style="display:none;margin-top:14px">
+    <div class="roll-controls">
+      <span class="tlabel">Source</span>
+      <button class="opt-btn active" id="rs-compose" onclick="setRollSource('compose')">✏️ Compose</button>
+      <button class="opt-btn"        id="rs-play"    onclick="setRollSource('play')">⌨️ Play tab</button>
+      <button class="opt-btn"        id="rs-demo"    onclick="setRollSource('demo')">🎵 Demo scale</button>
+      <div class="key-divider"></div>
+      <span class="tlabel">Speed</span>
+      <button class="opt-btn"        id="rspd-slow"   onclick="setRollSpeed(0.5)">Slow</button>
+      <button class="opt-btn active" id="rspd-normal" onclick="setRollSpeed(1)">Normal</button>
+      <button class="opt-btn"        id="rspd-fast"   onclick="setRollSpeed(2)">Fast</button>
+      <div class="key-divider"></div>
+      <button class="btn primary" id="rollPlayBtn" onclick="startRoll()">▶ Play</button>
+      <button class="btn" onclick="stopRoll()">■ Stop</button>
+      <label class="roll-loop-label">
+        <input type="checkbox" id="rollLoop"> Loop
+      </label>
+    </div>
+    <canvas id="rollCanvas" height="420"></canvas>
+    <div class="panel-desc" style="margin-top:10px">
+      Notes fall toward the <strong>staff strip</strong> at the bottom. Each note plays as it hits the line.
+      The <strong>x-axis</strong> shows pitch (note numbers, color-coded by pitch class).
+      Compose or type notes in other tabs, then come back here to watch them roll.
+    </div>
+  </div>
+
+  <!-- History of Music Timeline panel -->
+  <div id="historyPanel" style="display:none;margin-top:10px">
+    <p class="hist-intro">How music evolved from a single chanted melody to the precisely tuned 12-note system we use today.</p>
+    <div class="hist-timeline" id="histTimeline">
+      <!-- Eras injected by JS -->
+    </div>
+    <div class="hist-nav">
+      <button class="btn" onclick="histPrev()">← Previous</button>
+      <button class="btn" onclick="histNext()">Next →</button>
+      <button class="btn" onclick="histCloseAll()">Collapse all</button>
+    </div>
+  </div>
+
 </div><!-- .card -->
 
 <div class="key-legend">
@@ -610,11 +811,46 @@ const INTERVALS = [
 ];
 
 const SCALES = {
-  major:      { steps:[0,2,4,5,7,9,11,12],             name:'Major (Ionian)',     desc:'Bright and happy — the bedrock of Western music.',         pattern:'2–2–1–2–2–2–1' },
-  minor:      { steps:[0,2,3,5,7,8,10,12],             name:'Natural Minor',      desc:'Darker and more melancholic.',                             pattern:'2–1–2–2–1–2–2' },
-  pentatonic: { steps:[0,2,4,7,9,12],                  name:'Major Pentatonic',   desc:'Five notes, no half-steps — universally consonant.',       pattern:'2–2–3–2–3' },
-  blues:      { steps:[0,3,5,6,7,10,12],               name:'Blues Scale',        desc:'Minor pentatonic plus the "blue note" (+6).',              pattern:'3–2–1–1–3–2' },
-  chromatic:  { steps:[0,1,2,3,4,5,6,7,8,9,10,11,12], name:'Chromatic',          desc:'All 12 semitones — every possible note within an octave.', pattern:'1×12' },
+  // ── Standard ──────────────────────────────────────────────
+  major:      { steps:[0,2,4,5,7,9,11,12],             name:'Major (Ionian)',     desc:'Bright, happy, resolved. The default scale of Western music — stable and energetic.',                                     pattern:'2–2–1–2–2–2–1', group:'standard' },
+  minor:      { steps:[0,2,3,5,7,8,10,12],             name:'Natural Minor (Aeolian)', desc:'Darker, introspective, melancholic. The same notes as major but starting on the 6th degree.',                    pattern:'2–1–2–2–1–2–2', group:'standard' },
+  pentatonic: { steps:[0,2,4,7,9,12],                  name:'Major Pentatonic',   desc:'Five notes, no half-steps — universally consonant. Sounds good over almost anything.',                                   pattern:'2–2–3–2–3',     group:'standard' },
+  blues:      { steps:[0,3,5,6,7,10,12],               name:'Blues Scale',        desc:'Minor pentatonic plus the "blue note" at +6 — the flat fifth. The defining sound of blues and rock.',                   pattern:'3–2–1–1–3–2',   group:'standard' },
+  chromatic:  { steps:[0,1,2,3,4,5,6,7,8,9,10,11,12], name:'Chromatic',          desc:'All 12 semitones — every possible note within an octave.',                                                              pattern:'1×12',          group:'standard' },
+
+  // ── The 7 Modes (rotations of the major scale) ────────────
+  // Ionian = major (already above)
+  dorian:     { steps:[0,2,3,5,7,9,10,12],             name:'Dorian',             desc:'Minor with a raised 6th (+9 instead of +8). Slightly brighter than natural minor — jazzy, soulful. Used in jazz and funk. e.g. "So What" (Miles Davis), "Scarborough Fair".',          pattern:'2–1–2–2–2–1–2', group:'modes' },
+  phrygian:   { steps:[0,1,3,5,7,8,10,12],             name:'Phrygian',           desc:'Minor with a flat 2nd (+1). Very dark and Spanish-flavored. The half-step at the start creates an exotic, tense sound. e.g. Flamenco, "Wherever I May Roam" (Metallica).',             pattern:'1–2–2–2–1–2–2', group:'modes' },
+  lydian:     { steps:[0,2,4,6,7,9,11,12],             name:'Lydian',             desc:'Major with a raised 4th (+6 instead of +5). Dreamy, floating, otherworldly. That raised tritone gives it a magical, cinematic quality. e.g. John Williams scores, "Flying" themes.', pattern:'2–2–2–1–2–2–1', group:'modes' },
+  mixolydian: { steps:[0,2,4,5,7,9,10,12],             name:'Mixolydian',         desc:'Major with a flat 7th (+10 instead of +11). Sounds like a major scale that resists resolving home — slightly bluesy and rock-ready. e.g. "Sweet Home Alabama", "Norwegian Wood".',   pattern:'2–2–1–2–2–1–2', group:'modes' },
+  // Aeolian = natural minor (already above)
+  locrian:    { steps:[0,1,3,5,6,8,10,12],             name:'Locrian',            desc:'The darkest mode — minor with both a flat 2nd (+1) and a flat 5th (+6). The tonic chord is diminished, making it inherently unstable. Rare in practice; used for dramatic tension.', pattern:'1–2–2–1–2–2–2', group:'modes' },
+
+  // ── Minor variants ─────────────────────────────────────────
+  harmonic_minor: { steps:[0,2,3,5,7,8,11,12], name:'Harmonic Minor',    desc:'Natural minor with a raised 7th (+11 instead of +10). The gap between +8 and +11 is an augmented 2nd — exotic, tense, and instantly recognizable as classical or Middle Eastern. The V chord becomes a full dominant 7th, giving it strong pull home. Bach, Beethoven, metal.', pattern:'2–1–2–2–1–3–1', group:'minor' },
+  melodic_minor:  { steps:[0,2,3,5,7,9,11,12], name:'Melodic Minor',     desc:'Natural minor with raised 6th and 7th ascending (+9 and +11). Smooths out the awkward augmented 2nd of harmonic minor while keeping the leading tone. In jazz it\'s used in both directions and called "jazz minor" — every one of its 7 modes is harmonically rich and widely used.', pattern:'2–1–2–2–2–2–1', group:'minor' },
+  minor_pent:     { steps:[0,3,5,7,10,12],      name:'Minor Pentatonic',  desc:'The five-note foundation of rock, blues, and pop soloing. Drop the 2nd and 6th from natural minor and you get a scale with no half-steps — forgiving, expressive, and impossible to play "wrong". Stacked with the blues scale to create the full blues vocabulary. The guitarist\'s default.', pattern:'3–2–2–3–2', group:'minor' },
+
+  // ── Modes of Melodic Minor ─────────────────────────────────
+  phrygian_dom:  { steps:[0,1,4,5,7,8,10,12], name:'Phrygian Dominant', desc:'Mode 5 of harmonic minor. Like Phrygian but with a major 3rd (+4) — tense, dramatic, deeply Spanish and Middle Eastern. The foundation of flamenco. Stack a dominant 7th chord on the root and you hear the raw sound of Andalusian cadences. Also used in metal for an exotic, aggressive flavor.', pattern:'1–3–1–2–1–2–2', group:'mel_minor' },
+  lydian_dom:    { steps:[0,2,4,6,7,9,10,12], name:'Lydian Dominant',   desc:'Mode 4 of melodic minor. Major scale with a raised 4th (+6) and flat 7th (+10) — combines Lydian\'s dreamy quality with Mixolydian\'s unresolved tension. A jazz staple for soloing over dominant 7th chords, especially in tritone substitutions. e.g. John Coltrane, Herbie Hancock.', pattern:'2–2–2–1–2–1–2', group:'mel_minor' },
+  lydian_aug:    { steps:[0,2,4,6,8,9,11,12], name:'Lydian Augmented',  desc:'Mode 3 of melodic minor. Lydian with a raised 5th (+8) — stacks the dreaminess of Lydian with an augmented chord. Supremely ethereal and floating, with almost no sense of gravity. Used in film scores for magical or supernatural moments. Every step up feels like it could go anywhere.', pattern:'2–2–2–2–1–2–1', group:'mel_minor' },
+  altered:       { steps:[0,1,3,4,6,8,10,12], name:'Altered (Super Locrian)', desc:'Mode 7 of melodic minor. Every non-root note is altered: ♭9, ♯9, ♯11, ♭13 are all present simultaneously. This is the most harmonically tense scale in jazz — maximum chromatic pressure pulling toward resolution. Used over dominant 7th chords right before a cadence. The "everything goes wrong before it goes right" scale.', pattern:'1–2–1–2–2–2–2', group:'mel_minor' },
+  locrian_nat2:  { steps:[0,2,3,5,6,8,10,12], name:'Locrian ♮2',        desc:'Mode 6 of melodic minor. Like Locrian but with a natural 2nd (+2 instead of +1) — slightly less dark and more usable. The standard scale for half-diminished (m7♭5) chords in jazz. Smoother and more "inside" sounding than regular Locrian while keeping the characteristic flat 5th.', pattern:'2–1–2–1–2–2–2', group:'mel_minor' },
+  dorian_b2:     { steps:[0,1,3,5,7,9,10,12], name:'Dorian ♭2 (Phrygian ♮6)', desc:'Mode 2 of melodic minor. Like Dorian with a flat 2nd, or like Phrygian with a natural 6th. A warm, slightly exotic minor color — not as harsh as Phrygian, not as bright as Dorian. Used in jazz for a mysterious, slightly Middle Eastern flavor.', pattern:'1–2–2–2–2–1–2', group:'mel_minor' },
+
+  // ── Symmetric scales ───────────────────────────────────────
+  whole_tone:  { steps:[0,2,4,6,8,10,12],        name:'Whole Tone',            desc:'Six notes, all separated by whole steps — perfectly symmetrical. No half-steps, no leading tone, no sense of home or direction. Every chord built from it is augmented. Dreamy, directionless, and impressionistic — the sound of floating. Associated with Debussy. Only two distinct whole tone scales exist.', pattern:'2×6', group:'symmetric' },
+  dim_wh:      { steps:[0,2,3,5,6,8,9,11,12],    name:'Diminished (W–H)',      desc:'An 8-note symmetric scale alternating whole and half steps. Built from two interlocked diminished 7th chords. Used in jazz and classical over diminished chords — tense, shifting, and chromatic. Due to its symmetry, transposing by 3 semitones returns the same scale: only 3 distinct diminished scales exist.', pattern:'2–1×4', group:'symmetric' },
+  dim_hw:      { steps:[0,1,3,4,6,7,9,10,12],    name:'Diminished (H–W)',      desc:'The half-whole version of the diminished scale, also called "dominant diminished." Used over dominant 7th chords for a tense, jazzy sound — it contains both ♭9 and ♯9 simultaneously. A favorite bebop tool. Like its W-H sibling, it has only 3 distinct transpositions.', pattern:'1–2×4', group:'symmetric' },
+  augmented:   { steps:[0,3,4,7,8,11,12],         name:'Augmented Scale',       desc:'A 6-note symmetric scale made of alternating minor thirds and half-steps. Contains two interlocked augmented triads. Surreal and unstable — like the whole tone scale but more angular. Used by Messiaen and in 20th-century classical music. Only 4 distinct augmented scales exist.', pattern:'3–1×3', group:'symmetric' },
+
+  // ── World & other ──────────────────────────────────────────
+  hungarian_minor:  { steps:[0,2,3,6,7,8,11,12], name:'Hungarian Minor (Gypsy)', desc:'Natural minor with a raised 4th (+6) and raised 7th (+11) — two augmented 2nds give it an intensely Eastern European and Romani character. Also called the Gypsy scale. Dark and ornate, with a powerful pull between the raised 4th and the perfect 5th. Common in Hungarian folk music and Romani jazz.', pattern:'2–1–3–1–1–3–1', group:'world' },
+  double_harmonic:  { steps:[0,1,4,5,7,8,11,12], name:'Double Harmonic (Byzantine)', desc:'Two symmetrically placed augmented 2nds — one in the lower half, one in the upper half. Also called the Byzantine scale or Arabic scale. Maximally exotic in Western ears: contains both the Phrygian ♭2 and the harmonic minor ♯7, surrounding the tonic with tense half-steps. Used in Middle Eastern, Greek, and some metal music.', pattern:'1–3–1–2–1–3–1', group:'world' },
+  japanese_pent:    { steps:[0,1,5,7,8,12],       name:'In Scale (Japanese)',   desc:'A 5-note scale used in traditional Japanese music (the "In" or Hirajoshi scale). Its two half-steps surrounded by large gaps create an unmistakably Asian, spare, melancholic sound. Very few notes — very distinctive. Used in shakuhachi and koto music.', pattern:'1–4–2–1–4', group:'world' },
+  enigmatic:        { steps:[0,1,4,6,8,10,11,12], name:'Enigmatic Scale',       desc:'Invented by Verdi, used in one of his choral pieces. A deliberately strange 7-note scale with two augmented 2nds and chromatic motion at both ends. Has no standard use or function — it exists to sound odd. A curiosity from the late Romantic era.', pattern:'1–3–2–2–2–1–1', group:'world' },
 };
 const CHORDS = {
   major: { intervals:[0,4,7],    name:'Major',        symbol:'',     desc:'Bright and stable. Root + major third (4) + perfect fifth (7).' },
@@ -753,122 +989,238 @@ function getCtx() {
   return audioCtx;
 }
 
-// ── Instrument synthesis ──────────────────────────────────
-function synthPiano(ctx, freq, dur, vol=0.28) {
-  // Multiple oscillators with slight detuning + harmonic partials
-  const master = ctx.createGain();
-  master.gain.setValueAtTime(0, ctx.currentTime);
-  master.gain.linearRampToValueAtTime(vol, ctx.currentTime + 0.008);
-  master.gain.exponentialRampToValueAtTime(vol*0.4, ctx.currentTime + 0.12);
-  master.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
-  master.connect(ctx.destination);
+// ── Shared reverb ─────────────────────────────────────────
+let _rvNode = null, _rvCtx = null;
+function getReverb(ctx) {
+  if (_rvNode && _rvCtx === ctx) return _rvNode;
+  _rvCtx = ctx;
+  // Synthetic impulse response — exponential noise decay
+  const sr = ctx.sampleRate, len = sr * 2.2;
+  const buf = ctx.createBuffer(2, len, sr);
+  for (let ch = 0; ch < 2; ch++) {
+    const d = buf.getChannelData(ch);
+    for (let i = 0; i < len; i++) {
+      // Early reflections are denser, tail decays exponentially
+      const t = i / sr;
+      d[i] = (Math.random() * 2 - 1) * Math.exp(-t * 3.2);
+    }
+  }
+  _rvNode = ctx.createConvolver();
+  _rvNode.buffer = buf;
+  const rvGain = ctx.createGain(); rvGain.gain.value = 0.85;
+  _rvNode.connect(rvGain); rvGain.connect(ctx.destination);
+  return _rvNode;
+}
 
-  [[1,1],[2,0.35],[3,0.18],[4,0.1],[1.004,0.22],[0.996,0.22]].forEach(([ratio,amp]) => {
+// Helper: send signal to destination with a dry/wet reverb split
+function withReverb(ctx, node, dryAmt, wetAmt) {
+  const dry = ctx.createGain(); dry.gain.value = dryAmt;
+  const wet = ctx.createGain(); wet.gain.value = wetAmt;
+  node.connect(dry); dry.connect(ctx.destination);
+  node.connect(wet); wet.connect(getReverb(ctx));
+}
+
+// ── Instrument synthesis ──────────────────────────────────
+
+function synthPiano(ctx, freq, dur, vol=0.28) {
+  // Sine-harmonic bank (far warmer than sawtooth) + filter sweep + reverb
+  const t = ctx.currentTime;
+  const master = ctx.createGain();
+
+  // ADSR: snappy attack, natural decay
+  master.gain.setValueAtTime(0, t);
+  master.gain.linearRampToValueAtTime(vol, t + 0.007);
+  master.gain.exponentialRampToValueAtTime(vol * 0.6, t + 0.06);
+  master.gain.exponentialRampToValueAtTime(vol * 0.3, t + 0.35);
+  master.gain.exponentialRampToValueAtTime(0.001, t + Math.max(dur, 0.4));
+
+  // Lowpass filter — opens bright on strike, closes over time
+  const filt = ctx.createBiquadFilter();
+  filt.type = 'lowpass'; filt.Q.value = 0.9;
+  filt.frequency.setValueAtTime(7000, t);
+  filt.frequency.exponentialRampToValueAtTime(3000, t + 0.1);
+  filt.frequency.exponentialRampToValueAtTime(1200, t + Math.max(dur * 0.7, 0.3));
+  master.connect(filt);
+  withReverb(ctx, filt, 0.72, 0.28);
+
+  // Harmonic sine stack — gives warmth without harshness
+  [[1, 1.0], [2, 0.42], [3, 0.22], [4, 0.12], [5, 0.07], [6, 0.04]].forEach(([n, amp]) => {
     const o = ctx.createOscillator(), g = ctx.createGain();
-    o.type = 'sawtooth'; o.frequency.value = freq * ratio;
-    g.gain.value = amp;
-    o.connect(g); g.connect(master);
-    o.start(); o.stop(ctx.currentTime + dur);
+    o.type = 'sine'; o.frequency.value = freq * n; g.gain.value = amp;
+    o.connect(g); g.connect(master); o.start(); o.stop(t + dur + 0.2);
+  });
+  // Slight stereo detuning for natural chorus
+  [[-4, 0.16], [+4, 0.16]].forEach(([cents, amp]) => {
+    const o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = 'sine'; o.frequency.value = freq * Math.pow(2, cents / 1200); g.gain.value = amp;
+    o.connect(g); g.connect(master); o.start(); o.stop(t + dur + 0.2);
   });
 }
 
 function synthOrgan(ctx, freq, dur, vol=0.22) {
+  const t = ctx.currentTime;
   const master = ctx.createGain();
-  master.gain.setValueAtTime(0, ctx.currentTime);
-  master.gain.linearRampToValueAtTime(vol, ctx.currentTime + 0.015);
-  master.gain.setValueAtTime(vol, ctx.currentTime + dur - 0.02);
-  master.gain.linearRampToValueAtTime(0, ctx.currentTime + dur);
-  master.connect(ctx.destination);
+  master.gain.setValueAtTime(0, t);
+  master.gain.linearRampToValueAtTime(vol, t + 0.018);
+  master.gain.setValueAtTime(vol, t + dur - 0.025);
+  master.gain.linearRampToValueAtTime(0, t + dur);
 
-  // Hammond-style: fundamental + harmonics at fixed ratios
-  [1, 2, 3, 4, 6].forEach((harmonic, i) => {
-    const amps = [1, 0.5, 0.25, 0.125, 0.06];
+  // Leslie cabinet simulation — amplitude tremolo + chorus-like pitch wobble
+  const leslie = ctx.createGain();
+  master.connect(leslie);
+  const lfo = ctx.createOscillator(), lfoGain = ctx.createGain();
+  lfo.type = 'sine'; lfo.frequency.value = 5.8;
+  lfoGain.gain.value = 0.09;          // tremolo depth
+  lfo.connect(lfoGain); lfoGain.connect(leslie.gain);
+  leslie.gain.setValueAtTime(1, t);   // DC offset so tremolo goes ±0.09
+  lfo.start(); lfo.stop(t + dur);
+  withReverb(ctx, leslie, 0.78, 0.22);
+
+  // Hammond drawbar harmonics: 16', 8', 5⅓', 4', 2⅔', 2'
+  [[1,1.0],[2,0.65],[3,0.4],[4,0.28],[6,0.18],[8,0.1]].forEach(([h, amp]) => {
     const o = ctx.createOscillator(), g = ctx.createGain();
-    o.type = 'sine'; o.frequency.value = freq * harmonic;
-    g.gain.value = amps[i];
-    o.connect(g); g.connect(master);
-    o.start(); o.stop(ctx.currentTime + dur);
+    o.type = 'sine'; o.frequency.value = freq * h; g.gain.value = amp;
+    o.connect(g); g.connect(master); o.start(); o.stop(t + dur);
   });
 }
 
 function synthGuitar(ctx, freq, dur, vol=0.30) {
-  // Karplus-Strong: fill buffer with white noise, then low-pass filter fed back
-  const sampleRate = ctx.sampleRate;
-  const bufLen = Math.round(sampleRate / freq);
-  const buf = ctx.createBuffer(1, sampleRate * Math.min(dur, 3), sampleRate);
+  // Improved Karplus-Strong: triangle-noise blend seed + body resonance filter
+  const t = ctx.currentTime;
+  const sr = ctx.sampleRate;
+  const bufLen = Math.round(sr / freq);
+  const totalLen = Math.round(sr * Math.min(dur + 0.5, 4));
+  const buf = ctx.createBuffer(1, totalLen, sr);
   const data = buf.getChannelData(0);
 
-  // Seed with noise
+  // Seed: mix of noise and a half-period triangle (gives a more "pluck" transient)
   const seed = new Float32Array(bufLen);
-  for (let i = 0; i < bufLen; i++) seed[i] = Math.random() * 2 - 1;
-
-  // Fill using Karplus-Strong recurrence
-  for (let i = 0; i < data.length; i++) {
-    if (i < bufLen) { data[i] = seed[i]; }
-    else { data[i] = 0.996 * 0.5 * (data[i - bufLen] + data[i - bufLen + 1]); }
+  for (let i = 0; i < bufLen; i++) {
+    const tri = i < bufLen / 2 ? (2 * i / bufLen) : (2 - 2 * i / bufLen);
+    seed[i] = tri * 0.5 + (Math.random() * 2 - 1) * 0.5;
   }
 
-  const src = ctx.createBufferSource();
-  src.buffer = buf;
+  // Karplus-Strong with slightly slower decay (0.998) for warmer tone
+  for (let i = 0; i < totalLen; i++) {
+    data[i] = i < bufLen ? seed[i] : 0.998 * 0.5 * (data[i - bufLen] + data[i - bufLen + 1]);
+  }
+
+  const src = ctx.createBufferSource(); src.buffer = buf;
+
+  // Body resonance: gentle bandpass centered around the note
+  const body = ctx.createBiquadFilter();
+  body.type = 'peaking'; body.frequency.value = freq * 2.5;
+  body.Q.value = 1.5; body.gain.value = 4;
+
   const g = ctx.createGain();
-  g.gain.setValueAtTime(vol, ctx.currentTime);
-  g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
-  src.connect(g); g.connect(ctx.destination);
-  src.start(); src.stop(ctx.currentTime + dur);
+  g.gain.setValueAtTime(vol, t);
+  g.gain.exponentialRampToValueAtTime(0.001, t + dur + 0.4);
+
+  src.connect(body); body.connect(g);
+  withReverb(ctx, g, 0.80, 0.20);
+  src.start(); src.stop(t + dur + 0.5);
 }
 
 function synthBass(ctx, freq, dur, vol=0.35) {
-  const o = ctx.createOscillator(), g = ctx.createGain();
-  o.type = 'sine'; o.frequency.value = freq / 2; // one octave down
-  g.gain.setValueAtTime(0, ctx.currentTime);
-  g.gain.linearRampToValueAtTime(vol, ctx.currentTime + 0.06);
-  g.gain.setValueAtTime(vol * 0.8, ctx.currentTime + 0.2);
-  g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
-  // Sub overtone
-  const o2 = ctx.createOscillator(), g2 = ctx.createGain();
-  o2.type = 'triangle'; o2.frequency.value = freq;
-  g2.gain.value = 0.15;
-  o2.connect(g2); g2.connect(ctx.destination);
-  o2.start(); o2.stop(ctx.currentTime + dur);
-  o.connect(g); g.connect(ctx.destination);
-  o.start(); o.stop(ctx.currentTime + dur);
+  const t = ctx.currentTime;
+  // Sub octave sine for the fundamental punch
+  const subFreq = freq / 2;
+
+  // Attack click — short noise burst for the "pluck" transient
+  const clickBuf = ctx.createBuffer(1, Math.round(ctx.sampleRate * 0.025), ctx.sampleRate);
+  const cd = clickBuf.getChannelData(0);
+  for (let i = 0; i < cd.length; i++) cd[i] = (Math.random() * 2 - 1) * (1 - i / cd.length);
+  const clickSrc = ctx.createBufferSource(); clickSrc.buffer = clickBuf;
+  const clickFilt = ctx.createBiquadFilter(); clickFilt.type = 'bandpass'; clickFilt.frequency.value = freq * 1.5; clickFilt.Q.value = 0.8;
+  const clickGain = ctx.createGain(); clickGain.gain.value = vol * 0.5;
+  clickSrc.connect(clickFilt); clickFilt.connect(clickGain); clickGain.connect(ctx.destination);
+  clickSrc.start(); clickSrc.stop(t + 0.03);
+
+  // Lowpass filter for warmth
+  const filt = ctx.createBiquadFilter();
+  filt.type = 'lowpass'; filt.frequency.value = freq * 5; filt.Q.value = 1.2;
+
+  const master = ctx.createGain();
+  master.gain.setValueAtTime(0, t);
+  master.gain.linearRampToValueAtTime(vol, t + 0.04);
+  master.gain.setValueAtTime(vol * 0.85, t + 0.15);
+  master.gain.exponentialRampToValueAtTime(0.001, t + dur);
+  master.connect(filt); withReverb(ctx, filt, 0.88, 0.12);
+
+  // Sub sine + harmonic triangle for body
+  [[subFreq, 'sine', 1.0], [freq, 'triangle', 0.35], [freq * 2, 'sine', 0.12]].forEach(([f, type, amp]) => {
+    const o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = type; o.frequency.value = f; g.gain.value = amp;
+    o.connect(g); g.connect(master); o.start(); o.stop(t + dur);
+  });
 }
 
 function synthFlute(ctx, freq, dur, vol=0.22) {
-  const o = ctx.createOscillator(), g = ctx.createGain();
-  o.type = 'sine'; o.frequency.value = freq;
-  // Vibrato
-  const lfo = ctx.createOscillator(), lfoGain = ctx.createGain();
-  lfo.type = 'sine'; lfo.frequency.value = 5.5;
-  lfoGain.gain.value = 3;
-  lfo.connect(lfoGain); lfoGain.connect(o.frequency);
-  lfo.start(); lfo.stop(ctx.currentTime + dur);
-  // Slight harmonic
-  const o2 = ctx.createOscillator(), g2 = ctx.createGain();
-  o2.type = 'sine'; o2.frequency.value = freq * 2;
-  g2.gain.value = 0.08;
-  o2.connect(g2); g2.connect(ctx.destination);
-  o2.start(); o2.stop(ctx.currentTime + dur);
+  const t = ctx.currentTime;
 
-  g.gain.setValueAtTime(0, ctx.currentTime);
-  g.gain.linearRampToValueAtTime(vol, ctx.currentTime + 0.08);
-  g.gain.setValueAtTime(vol, ctx.currentTime + dur - 0.1);
-  g.gain.linearRampToValueAtTime(0, ctx.currentTime + dur);
-  o.connect(g); g.connect(ctx.destination);
-  o.start(); o.stop(ctx.currentTime + dur);
+  // Breath noise — filtered white noise burst at attack
+  const noiseBuf = ctx.createBuffer(1, Math.round(ctx.sampleRate * 0.18), ctx.sampleRate);
+  const nd = noiseBuf.getChannelData(0);
+  for (let i = 0; i < nd.length; i++) nd[i] = Math.random() * 2 - 1;
+  const noiseSrc = ctx.createBufferSource(); noiseSrc.buffer = noiseBuf;
+  const noiseFilt = ctx.createBiquadFilter(); noiseFilt.type = 'bandpass'; noiseFilt.frequency.value = freq * 1.2; noiseFilt.Q.value = 8;
+  const noiseGain = ctx.createGain();
+  noiseGain.gain.setValueAtTime(vol * 0.22, t);
+  noiseGain.gain.exponentialRampToValueAtTime(0.001, t + 0.16);
+  noiseSrc.connect(noiseFilt); noiseFilt.connect(noiseGain);
+  withReverb(ctx, noiseGain, 0.6, 0.4);
+  noiseSrc.start(); noiseSrc.stop(t + 0.18);
+
+  // Main tone — sine with delayed vibrato (vibrato kicks in after initial attack)
+  const o = ctx.createOscillator(); o.type = 'sine'; o.frequency.value = freq;
+  const lfo = ctx.createOscillator(), lfoDepth = ctx.createGain();
+  lfo.type = 'sine'; lfo.frequency.value = 5.4;
+  lfoDepth.gain.setValueAtTime(0, t);
+  lfoDepth.gain.linearRampToValueAtTime(0, t + 0.12);         // no vibrato at first
+  lfoDepth.gain.linearRampToValueAtTime(freq * 0.012, t + 0.28); // ramps in
+  lfo.connect(lfoDepth); lfoDepth.connect(o.frequency);
+  lfo.start(); lfo.stop(t + dur);
+
+  // 2nd harmonic adds a little body
+  const o2 = ctx.createOscillator(), g2 = ctx.createGain();
+  o2.type = 'sine'; o2.frequency.value = freq * 2; g2.gain.value = 0.1;
+  o2.connect(g2);
+
+  const filt = ctx.createBiquadFilter(); filt.type = 'lowpass'; filt.frequency.value = freq * 5;
+  const gMain = ctx.createGain();
+  gMain.gain.setValueAtTime(0, t);
+  gMain.gain.linearRampToValueAtTime(vol, t + 0.09);
+  gMain.gain.setValueAtTime(vol, t + dur - 0.12);
+  gMain.gain.linearRampToValueAtTime(0, t + dur);
+  o.connect(gMain); g2.connect(gMain); gMain.connect(filt);
+  withReverb(ctx, filt, 0.65, 0.35);
+  o.start(); o.stop(t + dur); o2.start(); o2.stop(t + dur);
 }
 
 function synthBells(ctx, freq, dur, vol=0.26) {
-  // Inharmonic partials (bell-like)
-  [[1,1],[2.756,0.45],[5.404,0.18],[3.0,0.14],[4.09,0.1]].forEach(([ratio,amp],i) => {
+  // Richer bell model: more partials, longer decay, reverb
+  const t = ctx.currentTime;
+  // Partial ratios and relative amplitudes based on a resonant metal bell
+  // (Chowning & Risset-inspired tuning)
+  [
+    [1.000, 1.00, 1.00],
+    [2.756, 0.50, 0.70],
+    [5.404, 0.25, 0.50],
+    [3.000, 0.20, 0.60],
+    [4.090, 0.16, 0.45],
+    [7.200, 0.10, 0.30],
+    [2.200, 0.08, 0.55],
+    [8.466, 0.06, 0.25],
+  ].forEach(([ratio, amp, decayFrac]) => {
+    const decayTime = Math.max(dur, 1.5) * decayFrac + 0.3;
     const o = ctx.createOscillator(), g = ctx.createGain();
     o.type = 'sine'; o.frequency.value = freq * ratio;
-    const decay = dur * (0.5 + i * 0.1);
-    g.gain.setValueAtTime(0, ctx.currentTime);
-    g.gain.linearRampToValueAtTime(vol * amp, ctx.currentTime + 0.004);
-    g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + decay);
-    o.connect(g); g.connect(ctx.destination);
-    o.start(); o.stop(ctx.currentTime + decay);
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(vol * amp, t + 0.003);
+    g.gain.exponentialRampToValueAtTime(0.001, t + decayTime);
+    o.connect(g);
+    withReverb(ctx, g, 0.55, 0.45);
+    o.start(); o.stop(t + decayTime + 0.05);
   });
 }
 
@@ -1303,7 +1655,7 @@ async function playScale(direction) {
 
 function selectScale(type) {
   selectedScale=type;
-  ['major','minor','pentatonic','blues','chromatic'].forEach(t => { const b=document.getElementById(`sbt-${t}`); if(b) b.classList.toggle('active',t===type); });
+  Object.keys(SCALES).forEach(t => { const b=document.getElementById(`sbt-${t}`); if(b) b.classList.toggle('active',t===type); });
   if (mode==='theory' && theoryTab==='scales') drawScaleStaff();
 }
 
@@ -1377,11 +1729,48 @@ function selectChordType(type) {
 // ═══════════════════════════════════════════════════════════
 //  THEORY DESCRIPTION
 // ═══════════════════════════════════════════════════════════
+
+// The 7 modes are rotations of the C major scale.
+// Starting on different degrees gives each mode its character.
+const MODE_DEGREES = {
+  major:      { degree: 1, degreeName: '1st (root)',    diffVsMajor: 'identical to major' },
+  dorian:     { degree: 2, degreeName: '2nd',           diffVsMajor: 'like major but ♭3 and ♭7 — minor feel, bright 6th' },
+  phrygian:   { degree: 3, degreeName: '3rd',           diffVsMajor: 'like major but ♭2, ♭3, ♭6, ♭7 — very dark' },
+  lydian:     { degree: 4, degreeName: '4th',           diffVsMajor: 'like major but ♯4 — dreamy raised tritone' },
+  mixolydian: { degree: 5, degreeName: '5th',           diffVsMajor: 'like major but ♭7 — bluesy, rock-ready' },
+  minor:      { degree: 6, degreeName: '6th (Aeolian)', diffVsMajor: 'natural minor — ♭3, ♭6, ♭7' },
+  locrian:    { degree: 7, degreeName: '7th',           diffVsMajor: 'like major but ♭2, ♭3, ♭5, ♭6, ♭7 — darkest' },
+};
+
+function modeRelationNote(scaleKey) {
+  const m = MODE_DEGREES[scaleKey];
+  if (!m) return '';
+  // Which note of C major is this mode's starting point?
+  const cMajor = [0,2,4,5,7,9,11];
+  const root = cMajor[m.degree - 1];
+  const rootName = NOTE_NAMES[root];
+  return `<br><span style="color:#9988bb;font-size:0.8rem">
+    Mode <strong>${m.degree}</strong> of the major scale — start on the ${m.degreeName} degree
+    (in C major: start on <strong>${rootName}</strong>).
+    Compared to major: <em>${m.diffVsMajor}</em>.
+  </span>`;
+}
+
 function updateTheoryDesc() {
   const el=document.getElementById('theoryDesc'); if(!el)return;
   if(theoryTab==='scales'){
-    const s=SCALES[selectedScale];
-    el.innerHTML=`<strong>${s.name}</strong> &nbsp;·&nbsp; ${s.desc}<br><span class="formula">Positions: ${s.steps.join(' · ')} &nbsp;|&nbsp; Intervals: ${s.pattern}</span>`;
+    const s = SCALES[selectedScale];
+    const groupLabels = {
+      standard:  null,
+      minor:     '<span style="color:#9988bb;font-size:0.8rem">Minor variant — shares the same 7 note positions as natural minor but with one or two raised notes.</span>',
+      modes:     null,  // handled by modeRelationNote
+      mel_minor: '<span style="color:#9988bb;font-size:0.8rem">Mode of Melodic Minor — one of 7 rotations of the melodic minor scale, widely used in jazz harmony.</span>',
+      symmetric: '<span style="color:#9988bb;font-size:0.8rem">Symmetric scale — built from a repeating interval pattern. Transpositions cycle back quickly; only a small number of distinct versions exist.</span>',
+      world:     '<span style="color:#9988bb;font-size:0.8rem">World / other scale — drawn from folk, classical, or non-Western traditions.</span>',
+    };
+    const groupNote = s.group === 'modes' ? modeRelationNote(selectedScale) : (groupLabels[s.group] ? `<br>${groupLabels[s.group]}` : '');
+    el.innerHTML = `<strong>${s.name}</strong> &nbsp;·&nbsp; ${s.desc}${groupNote}
+      <br><span class="formula">Positions: ${s.steps.join(' · ')} &nbsp;|&nbsp; Intervals: ${s.pattern}</span>`;
   } else {
     const c=CHORDS[selectedChordType], rootName=NOTE_NAMES[(chordRoot%12+12)%12];
     const formula=c.intervals.map((iv,i)=>i===0
@@ -2328,7 +2717,7 @@ function encodeShareURL(source) {
     params.set('notes', composeNotes.map(({n,slot,dur}) => `${n}:${slot}:${dur||'q'}`).join(','));
   } else if (source === 'play' && playNotes.length) {
     params.set('src', 'play');
-    params.set('play', playNotes.map(n => n===null?'_':String(n)).join('-'));
+    params.set('play', playNotes.map(n => n===null?'_':String(n)).join(','));
   }
   return `${base}#${params.toString()}`;
 }
@@ -2352,7 +2741,7 @@ function loadFromHash() {
       });
       setMode('compose');
     } else if (params.get('src') === 'play' && params.has('play')) {
-      document.getElementById('playInput').value = params.get('play').replace(/-/g,' ');
+      document.getElementById('playInput').value = params.get('play').replace(/,/g,' ');
       playNotes = parsePlayInput(document.getElementById('playInput').value);
       setMode('play');
     }
@@ -2378,6 +2767,691 @@ function showToast(msg) {
 }
 
 // ═══════════════════════════════════════════════════════════
+//  MODE: WAVE HARMONY
+// ═══════════════════════════════════════════════════════════
+
+// Just-intonation ratios as [numerator, denominator] for semitones 0–12
+const JI_FRAC = [
+  [1,1],[25,24],[9,8],[6,5],[5,4],[4,3],
+  [45,32],[3,2],[8,5],[5,3],[9,5],[15,8],[2,1]
+];
+
+let waveNotes    = new Set([0, 7]);
+let waveAnimId   = null;
+let waveAnimating = false;
+let wavePhase    = 0;
+
+function waveGcd(a, b) { return b === 0 ? a : waveGcd(b, a % b); }
+function waveLcm(a, b) { return (a / waveGcd(a, b)) * b; }
+
+function jiRatio(semitone) {
+  const [n, d] = JI_FRAC[Math.max(0, Math.min(12, semitone))];
+  return n / d;
+}
+
+// Period of composite wave = LCM of all denominators (capped)
+function compositePeriod(notes) {
+  let p = 1;
+  for (const s of notes) {
+    if (s < 0 || s > 12) continue;
+    const [, d] = JI_FRAC[s];
+    p = waveLcm(p, d);
+    if (p > 96) return 96;
+  }
+  return p;
+}
+
+function toggleWaveNote(n) {
+  if (waveNotes.has(n)) { if (waveNotes.size > 1) waveNotes.delete(n); }
+  else waveNotes.add(n);
+  updateWaveNoteBtns();
+  drawWave(wavePhase);
+}
+
+function setWavePreset(arr) {
+  waveNotes = new Set(arr);
+  updateWaveNoteBtns();
+  drawWave(wavePhase);
+}
+
+function updateWaveNoteBtns() {
+  for (let n = 0; n <= 12; n++) {
+    const b = document.getElementById(`wn${n}`);
+    if (!b) continue;
+    b.classList.toggle('active',   waveNotes.has(n));
+    b.classList.toggle('inactive', !waveNotes.has(n));
+  }
+}
+
+function playWaveNotes() {
+  [...waveNotes].forEach(n => playNoteRaw(n, 1.6));
+}
+
+function toggleWaveAnim() {
+  if (waveAnimating) {
+    waveAnimating = false;
+    if (waveAnimId) { cancelAnimationFrame(waveAnimId); waveAnimId = null; }
+    document.getElementById('waveAnimBtn').textContent = '〜 Animate';
+    drawWave(0); wavePhase = 0;
+  } else {
+    waveAnimating = true;
+    document.getElementById('waveAnimBtn').textContent = '■ Stop';
+    const t0 = performance.now();
+    function frame(ts) {
+      if (!waveAnimating) return;
+      wavePhase = (ts - t0) / 2000; // scroll at 0.5 root-periods/sec
+      drawWave(wavePhase);
+      waveAnimId = requestAnimationFrame(frame);
+    }
+    waveAnimId = requestAnimationFrame(frame);
+  }
+}
+
+function stopWaveAnim() {
+  waveAnimating = false;
+  if (waveAnimId) { cancelAnimationFrame(waveAnimId); waveAnimId = null; }
+  const b = document.getElementById('waveAnimBtn');
+  if (b) b.textContent = '〜 Animate';
+  wavePhase = 0;
+}
+
+function drawWave(phase = 0) {
+  const canvas = document.getElementById('waveCanvas');
+  if (!canvas) return;
+  const dw = canvas.parentElement?.clientWidth || 820;
+  if (canvas.width !== Math.round(dw)) canvas.width = Math.round(dw);
+
+  const ctx  = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const notes = [...waveNotes].sort((a, b) => a - b);
+  const period = compositePeriod(waveNotes);
+  const showCycles = Math.min(period, 8); // x-axis spans this many root periods
+
+  // ── Background sections ───────────────────────────────────
+  const splitY = Math.round(H * 0.40); // top = individual, bottom = composite
+  ctx.fillStyle = '#0f0f1e'; ctx.fillRect(0, 0, W, splitY);
+  ctx.fillStyle = '#080810'; ctx.fillRect(0, splitY, W, H - splitY);
+
+  // Section labels
+  ctx.font = '9px sans-serif'; ctx.textBaseline = 'top'; ctx.textAlign = 'left';
+  ctx.fillStyle = '#333355'; ctx.fillText('INDIVIDUAL WAVES', 8, 4);
+  ctx.fillStyle = '#2a2a44'; ctx.fillText('COMPOSITE  (sum of all active notes)', 8, splitY + 4);
+
+  // Divider
+  ctx.strokeStyle = '#2a2a40'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(0, splitY); ctx.lineTo(W, splitY); ctx.stroke();
+
+  // ── Period marker ─────────────────────────────────────────
+  if (period <= showCycles + 0.01) {
+    const px = (period / showCycles) * W;
+    ctx.strokeStyle = 'rgba(100,90,200,0.35)';
+    ctx.lineWidth = 1.5; ctx.setLineDash([5, 4]);
+    ctx.beginPath(); ctx.moveTo(px, 0); ctx.lineTo(px, H - 16); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = '#5555aa'; ctx.font = 'bold 9px monospace';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+    ctx.fillText('↺ 1 cycle', px, H - 1);
+  }
+
+  // ── Axes ──────────────────────────────────────────────────
+  const indMid = splitY / 2;
+  const cmpMid = splitY + (H - splitY - 20) / 2;
+  ctx.strokeStyle = '#1e1e30'; ctx.lineWidth = 0.8;
+  for (const y of [indMid, cmpMid]) {
+    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+  }
+
+  // Beat period lines for root (thin tick every cycle)
+  for (let c = 1; c <= showCycles; c++) {
+    const x = (c / showCycles) * W;
+    ctx.strokeStyle = '#181826'; ctx.lineWidth = 0.5;
+    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, splitY - 2); ctx.stroke();
+  }
+
+  // ── Individual waves ──────────────────────────────────────
+  const indAmp = Math.max(12, (splitY / 2) * 0.72);
+  notes.forEach(n => {
+    const ratio = jiRatio(n);
+    const col   = noteColor(n);
+    ctx.strokeStyle = col;
+    ctx.globalAlpha = 0.60;
+    ctx.lineWidth   = 1.8;
+    ctx.beginPath();
+    for (let px = 0; px <= W; px += 1) {
+      const t = (px / W) * showCycles + phase;
+      const y = indMid - indAmp * Math.sin(2 * Math.PI * ratio * t);
+      px === 0 ? ctx.moveTo(px, y) : ctx.lineTo(px, y);
+    }
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+  });
+
+  // Legend: note number + ratio label at left edge
+  const legendX = W - 6;
+  notes.forEach((n, i) => {
+    const [num, den] = JI_FRAC[n] || [1, 1];
+    const col = noteColor(n);
+    ctx.fillStyle = col;
+    ctx.globalAlpha = 0.85;
+    ctx.font = 'bold 9px monospace';
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'middle';
+    const ly = 14 + i * 13;
+    ctx.fillText(`${n}  ×${num}/${den}`, legendX, ly);
+    ctx.globalAlpha = 1;
+  });
+
+  // ── Composite wave ────────────────────────────────────────
+  const cmpAmp = Math.max(20, ((H - splitY - 20) / 2) * 0.78);
+  const norm   = 1 / notes.length;
+
+  // Shading: fill area under composite curve
+  ctx.beginPath();
+  for (let px = 0; px <= W; px++) {
+    const t = (px / W) * showCycles + phase;
+    const sum = notes.reduce((s, n) => s + Math.sin(2 * Math.PI * jiRatio(n) * t), 0);
+    const y = cmpMid - cmpAmp * norm * sum;
+    px === 0 ? ctx.moveTo(px, y) : ctx.lineTo(px, y);
+  }
+  ctx.lineTo(W, cmpMid); ctx.lineTo(0, cmpMid); ctx.closePath();
+  ctx.fillStyle = 'rgba(160,140,255,0.07)'; ctx.fill();
+
+  // Composite line
+  ctx.beginPath();
+  for (let px = 0; px <= W; px++) {
+    const t = (px / W) * showCycles + phase;
+    const sum = notes.reduce((s, n) => s + Math.sin(2 * Math.PI * jiRatio(n) * t), 0);
+    const y = cmpMid - cmpAmp * norm * sum;
+    px === 0 ? ctx.moveTo(px, y) : ctx.lineTo(px, y);
+  }
+  ctx.strokeStyle = '#ddd4ff'; ctx.lineWidth = 2.5;
+  ctx.shadowColor = '#9988cc'; ctx.shadowBlur = 7;
+  ctx.stroke(); ctx.shadowBlur = 0;
+
+  // ── Beat envelope for 2-note close intervals ──────────────
+  // When |f1 - f2| is small, draw the beating amplitude envelope
+  if (notes.length === 2) {
+    const r1 = jiRatio(notes[0]), r2 = jiRatio(notes[1]);
+    const beatFreq = Math.abs(r2 - r1); // in root-period units
+    if (beatFreq > 0 && beatFreq < 0.35) {
+      ctx.beginPath();
+      let first = true;
+      for (let px = 0; px <= W; px++) {
+        const t = (px / W) * showCycles + phase;
+        const env = Math.abs(Math.cos(Math.PI * beatFreq * t));
+        const y = cmpMid - cmpAmp * env;
+        first ? ctx.moveTo(px, y) : ctx.lineTo(px, y);
+        first = false;
+      }
+      ctx.beginPath();
+      for (let px = 0; px <= W; px++) {
+        const t = (px / W) * showCycles + phase;
+        const env = Math.abs(Math.cos(Math.PI * beatFreq * t));
+        const y = cmpMid + cmpAmp * env;
+        px === 0 ? ctx.moveTo(px, y) : ctx.lineTo(px, y);
+      }
+      ctx.strokeStyle = 'rgba(255,140,80,0.35)'; ctx.lineWidth = 1.2;
+      ctx.setLineDash([3, 3]); ctx.stroke(); ctx.setLineDash([]);
+      // label
+      ctx.fillStyle = 'rgba(255,140,80,0.55)'; ctx.font = '9px sans-serif';
+      ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+      ctx.fillText('beating envelope', 6, cmpMid - cmpAmp - 13);
+    }
+  }
+
+  // ── Cycle ruler ───────────────────────────────────────────
+  ctx.strokeStyle = '#252535'; ctx.lineWidth = 1;
+  for (let c = 1; c <= showCycles; c++) {
+    const x = (c / showCycles) * W;
+    ctx.beginPath(); ctx.moveTo(x, H - 18); ctx.lineTo(x, H); ctx.stroke();
+    ctx.fillStyle = '#333350'; ctx.font = '8px monospace';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(String(c), x, H - 8);
+  }
+  ctx.fillStyle = '#282840'; ctx.font = '8px sans-serif';
+  ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+  ctx.fillText('root periods →', 4, H - 8);
+
+  updateWaveInfo(notes, period, showCycles);
+}
+
+function consonanceRating(period) {
+  if (period <= 1)  return { stars:'★★★★★', label:'Unison / octave',    color:'#55cc88' };
+  if (period <= 2)  return { stars:'★★★★★', label:'Perfectly consonant', color:'#66cc66' };
+  if (period <= 4)  return { stars:'★★★★',  label:'Very consonant',      color:'#aacc44' };
+  if (period <= 6)  return { stars:'★★★',   label:'Consonant',           color:'#cccc33' };
+  if (period <= 12) return { stars:'★★',    label:'Mildly dissonant',    color:'#ccaa33' };
+  if (period <= 32) return { stars:'★',     label:'Dissonant',           color:'#cc6633' };
+  return                   { stars:'✗',     label:'Very dissonant',      color:'#cc3333' };
+}
+
+function updateWaveInfo(notes, period, showCycles) {
+  const el = document.getElementById('waveInfo');
+  if (!el) return;
+  const c = consonanceRating(period);
+
+  // Ratio info
+  let ratioHtml = '';
+  if (notes.length === 2) {
+    const diff = notes[1] - notes[0];
+    if (diff >= 0 && diff <= 12) {
+      const [num, den] = JI_FRAC[diff];
+      const iv = INTERVALS[diff] || {};
+      ratioHtml = `Ratio <strong style="color:${noteColor(diff)}">${num}:${den}</strong>
+        &nbsp;·&nbsp; ${iv.name || ''} &nbsp;·&nbsp; `;
+    }
+  } else if (notes.length > 1) {
+    const pairs = [];
+    for (let i = 0; i < notes.length - 1; i++) {
+      const d = notes[i+1] - notes[i];
+      if (d >= 0 && d <= 12) {
+        const [n2, d2] = JI_FRAC[d];
+        pairs.push(`<span style="color:${noteColor(d)}">${notes[i]}→${notes[i+1]}: ${n2}:${d2}</span>`);
+      }
+    }
+    ratioHtml = `Intervals: ${pairs.join(' · ')} &nbsp;·&nbsp; `;
+  }
+
+  // Period explanation
+  const periodStr = period >= 96 ? '96+' : String(period);
+  const periodExpl = period <= 2
+    ? `Waves realign every <strong>${periodStr}</strong> root cycle — nearly instant. Sounds completely at rest.`
+    : period <= 6
+    ? `Waves realign every <strong>${periodStr}</strong> root cycles — quick, clean, satisfying.`
+    : period <= 16
+    ? `Waves realign every <strong>${periodStr}</strong> root cycles — some tension, but still recognizable pattern.`
+    : `Composite takes <strong>${periodStr}+ </strong>root cycles to realign — the waves never seem to settle. Feels unresolved or dissonant.`;
+
+  // Beating note for close intervals
+  let beatHtml = '';
+  if (notes.length === 2) {
+    const r1 = jiRatio(notes[0]), r2 = jiRatio(notes[1]);
+    const beatFreq = Math.abs(r2 - r1);
+    if (beatFreq > 0 && beatFreq < 0.35) {
+      const beatsPerSec = beatFreq * noteFreq(notes[0] + transpose);
+      beatHtml = `<br><span style="color:#dd8844">
+        <strong>Beating detected</strong> — the two waves are close in frequency and cancel/reinforce each other
+        ~${beatsPerSec.toFixed(1)} times per second at this pitch. This creates a "waver" or wobble that your ear
+        hears as instability — it <em>wants to resolve</em> to a cleaner interval like a unison or fifth.</span>`;
+    }
+  }
+
+  // Trivia line
+  const triviaMap = {
+    2: 'The period 2 of the perfect fifth (3:2) means every 2 root cycles the waves meet exactly in phase — the simplest possible alignment after the octave.',
+    32: 'The tritone (45:32) has such a complex ratio it takes 32 root cycles to realign. Western music avoided it for centuries — called "diabolus in musica" (the devil in music).',
+    24: 'The minor second (25:24) creates extremely slow beating — the waves are almost identical in frequency, producing a wobble your ear finds unpleasant and unfinished.',
+  };
+  const triviaHtml = triviaMap[period] ? `<br><span style="color:#8888aa;font-size:0.78rem">${triviaMap[period]}</span>` : '';
+
+  el.innerHTML = `${ratioHtml}<span style="color:${c.color}"><strong>${c.stars} ${c.label}</strong></span>
+    <br>${periodExpl}${beatHtml}${triviaHtml}`;
+}
+
+function initWavePanel() {
+  const container = document.getElementById('waveNoteBtns');
+  if (!container || container.children.length) return;
+  for (let n = 0; n <= 12; n++) {
+    const btn = document.createElement('button');
+    btn.id = `wn${n}`; btn.className = 'wave-note-btn ' + (waveNotes.has(n) ? 'active' : 'inactive');
+    btn.textContent = String(n);
+    btn.style.background = noteColor(n);
+    btn.addEventListener('click', () => toggleWaveNote(n));
+    container.appendChild(btn);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+//  MODE: PIANO ROLL
+// ═══════════════════════════════════════════════════════════
+let rollSource   = 'compose';
+let rollSpeedMul = 1;
+let rollPlaying  = false;
+let rollAnimId   = null;
+let rollEvents   = [];  // [{pitch, startMs, durationMs, played}]
+let rollStartTime = null;
+let rollRange    = { min: -1, max: 13 };
+
+const ROLL_PX_PER_BEAT = 90; // pixels per beat at speed 1
+
+function setRollSource(s) {
+  rollSource = s;
+  ['compose','play','demo'].forEach(t => document.getElementById(`rs-${t}`)?.classList.toggle('active', t===s));
+  if (!rollPlaying) drawRollIdle();
+}
+function setRollSpeed(v) {
+  rollSpeedMul = v;
+  const map = { 0.5:'slow', 1:'normal', 2:'fast' };
+  Object.entries(map).forEach(([val,id]) => document.getElementById(`rspd-${id}`)?.classList.toggle('active', parseFloat(val)===v));
+}
+
+function getRollEventList() {
+  const msPerBeat = 60000 / bpm;
+  if (rollSource === 'compose') {
+    const by = {};
+    composeNotes.forEach(({n, slot, dur}) => { if (!by[slot]) by[slot]=[]; by[slot].push({n, dur: dur||'quarter'}); });
+    const evs = []; let tick = 0;
+    Object.keys(by).map(Number).sort((a,b)=>a-b).forEach(slot => {
+      const entries = by[slot];
+      const maxBeats = Math.max(...entries.map(e => DUR_BEATS[e.dur]||1));
+      entries.forEach(({n,dur}) => {
+        if (dur!=='rest') evs.push({pitch:n, startMs:tick*msPerBeat, durationMs:DUR_BEATS[dur]*msPerBeat*0.92});
+      });
+      tick += maxBeats;
+    });
+    return evs;
+  } else if (rollSource === 'play') {
+    return playNotes.map((n,i) => n===null ? null : {pitch:n, startMs:i*msPerBeat, durationMs:msPerBeat*0.85}).filter(Boolean);
+  } else {
+    // Demo: major scale up then down
+    const scale = [0,2,4,5,7,9,11,12,11,9,7,5,4,2,0];
+    return scale.map((n,i) => ({pitch:n, startMs:i*msPerBeat, durationMs:msPerBeat*0.85}));
+  }
+}
+
+function computeRollRange(evs) {
+  if (!evs.length) return { min: -1, max: 13 };
+  const pitches = evs.map(e => e.pitch);
+  return { min: Math.min(0, ...pitches) - 1, max: Math.max(12, ...pitches) + 1 };
+}
+
+function startRoll() {
+  stopRoll();
+  const evList = getRollEventList();
+  if (!evList.length) { drawRollIdle(); return; }
+  rollEvents = evList.map(e => ({...e, played:false}));
+  rollRange  = computeRollRange(rollEvents);
+  rollPlaying = true;
+  rollStartTime = performance.now();
+  const btn = document.getElementById('rollPlayBtn');
+  if (btn) btn.disabled = true;
+  rollAnimId = requestAnimationFrame(drawRollFrame);
+}
+
+function stopRoll() {
+  rollPlaying = false;
+  if (rollAnimId) { cancelAnimationFrame(rollAnimId); rollAnimId = null; }
+  const btn = document.getElementById('rollPlayBtn');
+  if (btn) btn.disabled = false;
+}
+
+function getRollCanvas() { return document.getElementById('rollCanvas'); }
+
+function ensureRollCanvasWidth() {
+  const canvas = getRollCanvas();
+  if (!canvas) return;
+  const w = canvas.parentElement?.clientWidth || 800;
+  if (canvas.width !== w) canvas.width = w;
+}
+
+function rollLaneW(canvas) {
+  const n = rollRange.max - rollRange.min + 1;
+  return canvas.width / n;
+}
+
+function rollLaneX(pitch, laneW) { return (pitch - rollRange.min) * laneW; }
+
+function rrect(ctx, x, y, w, h, r) {
+  r = Math.max(0, Math.min(r, w/2, h/2));
+  ctx.beginPath();
+  ctx.moveTo(x+r, y); ctx.lineTo(x+w-r, y); ctx.arcTo(x+w, y, x+w, y+r, r);
+  ctx.lineTo(x+w, y+h-r); ctx.arcTo(x+w, y+h, x+w-r, y+h, r);
+  ctx.lineTo(x+r, y+h); ctx.arcTo(x, y+h, x, y+h-r, r);
+  ctx.lineTo(x, y+r); ctx.arcTo(x, y, x+r, y, r);
+  ctx.closePath();
+}
+
+function drawRollFrame(timestamp) {
+  if (!rollPlaying) return;
+  const canvas = getRollCanvas();
+  if (!canvas) return;
+  ensureRollCanvasWidth();
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const hitY = H - 82;
+  const msPerBeat = 60000 / bpm;
+  const pxPerMs = (ROLL_PX_PER_BEAT / msPerBeat) * rollSpeedMul;
+  const elapsed  = (timestamp - rollStartTime);  // wall-clock ms
+  const scrolled = elapsed * rollSpeedMul;        // virtual ms elapsed
+  const laneW = rollLaneW(canvas);
+
+  // — Background —
+  ctx.fillStyle = '#111118';
+  ctx.fillRect(0, 0, W, H);
+
+  // — Lane shading (even = staff lines) —
+  for (let n = rollRange.min; n <= rollRange.max; n++) {
+    if (n % 2 !== 0) continue;
+    const isSolid = (((n % 4) + 4) % 4 === 0);
+    ctx.fillStyle = isSolid ? '#181828' : '#141420';
+    ctx.fillRect(rollLaneX(n, laneW), 0, laneW, hitY);
+  }
+
+  // — Beat grid —
+  const firstBeat = Math.floor(scrolled / msPerBeat) - 1;
+  for (let b = firstBeat; b < firstBeat + Math.ceil(hitY / (ROLL_PX_PER_BEAT * rollSpeedMul)) + 4; b++) {
+    const beatMs = b * msPerBeat;
+    const y = hitY - (beatMs - scrolled) * pxPerMs;
+    if (y < -4 || y > hitY + 4) continue;
+    const isMeasure = (b % 4 === 0);
+    ctx.strokeStyle = isMeasure ? '#2e2e4e' : '#1c1c2c';
+    ctx.lineWidth = isMeasure ? 1.2 : 0.5;
+    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+    if (isMeasure && y < hitY - 4) {
+      ctx.fillStyle = '#33334a';
+      ctx.font = '9px monospace';
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'bottom';
+      ctx.fillText(`B${b+1}`, 4, y - 1);
+    }
+  }
+
+  // — Note blocks —
+  rollEvents.forEach(ev => {
+    const yBottom = hitY + (scrolled - ev.startMs) * pxPerMs;
+    const yTop    = yBottom - ev.durationMs * pxPerMs;
+    if (yBottom < -20 || yTop > hitY + 10) return;
+
+    // Fire audio exactly once when bottom crosses hitY
+    if (!ev.played && scrolled >= ev.startMs) {
+      ev.played = true;
+      playNote(ev.pitch, ev.durationMs / 1000 * 0.9);
+    }
+
+    const lx = rollLaneX(ev.pitch, laneW);
+    const col = noteColor(ev.pitch);
+    const drawTop    = Math.max(0, yTop);
+    const drawBottom = Math.min(hitY + 2, yBottom);
+    const drawH      = drawBottom - drawTop;
+    if (drawH <= 0) return;
+
+    // Main block
+    ctx.fillStyle = col;
+    ctx.globalAlpha = 0.88;
+    rrect(ctx, lx + 2, drawTop, laneW - 4, drawH, Math.min(5, laneW * 0.28));
+    ctx.fill();
+    ctx.globalAlpha = 1;
+
+    // Glow as it hits the line
+    const atLine = yTop <= hitY && yBottom >= hitY - 4;
+    if (atLine) {
+      ctx.save();
+      ctx.shadowColor = col;
+      ctx.shadowBlur = 14;
+      ctx.fillStyle = col;
+      ctx.globalAlpha = 0.95;
+      rrect(ctx, lx + 2, drawTop, laneW - 4, Math.min(10, drawH), 3);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    // Number label
+    if (drawH > 12 && laneW > 14) {
+      const fs = Math.min(11, Math.max(7, laneW * 0.55));
+      ctx.fillStyle = '#fff';
+      ctx.globalAlpha = 0.9;
+      ctx.font = `bold ${fs}px monospace`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      const labelY = Math.max(drawTop + fs*0.6, Math.min(drawBottom - fs*0.6, (drawTop + drawBottom) / 2));
+      ctx.fillText(String(ev.pitch), lx + laneW/2, labelY);
+      ctx.globalAlpha = 1;
+    }
+  });
+
+  // — Staff strip at bottom —
+  drawRollStaffStrip(ctx, W, H, hitY, laneW);
+
+  // — Check completion —
+  const totalMs = Math.max(...rollEvents.map(e => e.startMs + e.durationMs));
+  if (scrolled > totalMs + msPerBeat * 2) {
+    if (document.getElementById('rollLoop')?.checked) {
+      rollStartTime = performance.now();
+      rollEvents.forEach(e => { e.played = false; });
+    } else {
+      stopRoll();
+      return;
+    }
+  }
+
+  rollAnimId = requestAnimationFrame(drawRollFrame);
+}
+
+function drawRollStaffStrip(ctx, W, H, hitY, laneW) {
+  // Dark strip background
+  ctx.fillStyle = '#0c0c18';
+  ctx.fillRect(0, hitY, W, H - hitY);
+
+  // Horizontal hit line
+  ctx.strokeStyle = '#7060cc';
+  ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(0, hitY); ctx.lineTo(W, hitY); ctx.stroke();
+
+  // Lane dividers & pitch labels
+  for (let n = rollRange.min; n <= rollRange.max; n++) {
+    const lx = rollLaneX(n, laneW);
+    const col = noteColor(n);
+
+    // Vertical lane divider
+    ctx.strokeStyle = '#1e1e2c';
+    ctx.lineWidth = 0.5;
+    ctx.beginPath(); ctx.moveTo(lx, hitY); ctx.lineTo(lx, H); ctx.stroke();
+
+    // Colored dot above label for note identity
+    const isOctC = n % 12 === 0;
+    ctx.fillStyle = col;
+    ctx.globalAlpha = isOctC ? 1 : 0.65;
+    ctx.beginPath();
+    ctx.arc(lx + laneW/2, hitY + 12, Math.min(5, laneW * 0.3), 0, Math.PI*2);
+    ctx.fill();
+    ctx.globalAlpha = 1;
+
+    // Number label
+    if (laneW >= 12) {
+      const fs = Math.min(10, Math.max(7, laneW * 0.52));
+      ctx.fillStyle = col;
+      ctx.globalAlpha = isOctC ? 1 : 0.7;
+      ctx.font = `${isOctC ? 'bold ' : ''}${fs}px monospace`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(String(n), lx + laneW/2, hitY + 28);
+      ctx.globalAlpha = 1;
+    }
+
+    // Note name for octave Cs and every 4 semitones when space allows
+    if ((isOctC || laneW >= 28) && laneW >= 16) {
+      ctx.fillStyle = isOctC ? '#8888bb' : '#555566';
+      ctx.font = `${Math.min(8, laneW * 0.38)}px sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(NOTE_NAMES[((n%12)+12)%12], lx + laneW/2, hitY + 44);
+    }
+
+    // Staff line indicators (horizontal strokes in the strip for even pitches)
+    if (n % 2 === 0) {
+      const isSolid = (((n % 4) + 4) % 4 === 0);
+      ctx.strokeStyle = isSolid ? '#3a3a5a' : '#252538';
+      ctx.lineWidth = isSolid ? 1.2 : 0.7;
+      if (!isSolid) ctx.setLineDash([3,3]); else ctx.setLineDash([]);
+      ctx.beginPath();
+      ctx.moveTo(lx + 1, hitY + 60);
+      ctx.lineTo(lx + laneW - 1, hitY + 60);
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+  }
+}
+
+function drawRollIdle() {
+  const canvas = getRollCanvas();
+  if (!canvas) return;
+  ensureRollCanvasWidth();
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const hitY = H - 82;
+
+  const evList = getRollEventList();
+  rollRange = computeRollRange(evList);
+  const laneW = rollLaneW(canvas);
+
+  // Background
+  ctx.fillStyle = '#111118';
+  ctx.fillRect(0, 0, W, H);
+
+  // Lane shading
+  for (let n = rollRange.min; n <= rollRange.max; n++) {
+    if (n % 2 !== 0) continue;
+    const isSolid = (((n % 4) + 4) % 4 === 0);
+    ctx.fillStyle = isSolid ? '#181828' : '#141420';
+    ctx.fillRect(rollLaneX(n, laneW), 0, laneW, hitY);
+  }
+
+  // Preview: show notes scaled to fill the visible area
+  if (evList.length) {
+    const msPerBeat = 60000 / bpm;
+    const pxPerMs   = ROLL_PX_PER_BEAT / msPerBeat;
+    const totalMs   = Math.max(...evList.map(e => e.startMs + e.durationMs));
+    const scale     = Math.min(1, (hitY - 20) / (totalMs * pxPerMs + 1));
+    evList.forEach(ev => {
+      const lx = rollLaneX(ev.pitch, laneW);
+      const yBottom = hitY - ev.startMs * pxPerMs * scale;
+      const yTop    = yBottom - Math.max(4, ev.durationMs * pxPerMs * scale);
+      if (yBottom < 0 || yTop > hitY) return;
+      ctx.fillStyle = noteColor(ev.pitch);
+      ctx.globalAlpha = 0.45;
+      rrect(ctx, lx + 2, yTop, laneW - 4, yBottom - yTop, 3);
+      ctx.fill();
+      ctx.globalAlpha = 1;
+    });
+    // "Press play" prompt
+    ctx.fillStyle = '#9988cc';
+    ctx.font = 'bold 14px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('▶  Press Play to animate', W/2, hitY / 2 - 10);
+    ctx.font = '11px sans-serif';
+    ctx.fillStyle = '#555566';
+    ctx.fillText(`${evList.length} note${evList.length!==1?'s':''}`, W/2, hitY/2 + 12);
+  } else {
+    ctx.fillStyle = '#444455';
+    ctx.font = '13px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    const hints = { compose:'Go to Compose tab → add notes → come back here', play:'Go to Play tab → type notes → come back here', demo:'Press Play to hear the demo scale' };
+    ctx.fillText(hints[rollSource] || '', W/2, hitY/2 - 8);
+    ctx.fillStyle = '#333344';
+    ctx.fillText('No notes to show', W/2, hitY/2 - 28);
+  }
+
+  drawRollStaffStrip(ctx, W, H, hitY, laneW);
+}
+
+function initRollCanvas() {
+  ensureRollCanvasWidth();
+  drawRollIdle();
+}
+
+// ═══════════════════════════════════════════════════════════
 //  MODE SWITCH
 // ═══════════════════════════════════════════════════════════
 function redraw() {
@@ -2391,15 +3465,17 @@ function redraw() {
   else if (mode==='play')      drawPlayStaff(playNotes);
   else if (mode==='harmonic')  drawHarmonic();
   else if (mode==='share')     updateSharePanel();
+  else if (mode==='roll')      drawRollIdle();
+  else if (mode==='waves')     drawWave(wavePhase);
 }
 
 function setMode(m) {
-  stopMelody(); theoryAnim=false; stopPlay(); mode=m;
-  const ALL_MODES = ['explore','melody','compose','theory','intervals','circle','clock','play','harmonic','share'];
+  stopMelody(); theoryAnim=false; stopPlay(); stopRoll(); stopWaveAnim(); mode=m;
+  const ALL_MODES = ['explore','melody','compose','theory','intervals','circle','clock','play','harmonic','share','waves','roll','history'];
   document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', ALL_MODES[i]===m));
 
-  // Staff SVG: visible except circle, clock, and intervals-trainer sub-tab
-  const staffVisible = !['circle','clock','share'].includes(m) && !(m==='intervals' && ivTab==='trainer');
+  // Staff SVG: visible except circle, clock, share, roll, waves, history and intervals-trainer sub-tab
+  const staffVisible = !['circle','clock','share','roll','waves','history'].includes(m) && !(m==='intervals' && ivTab==='trainer');
   document.getElementById('staffSvg').style.display = staffVisible ? 'block' : 'none';
   document.getElementById('infoBar').style.display = staffVisible ? 'block' : 'none';
 
@@ -2412,6 +3488,12 @@ function setMode(m) {
   document.getElementById('playPanel').style.display     = m==='play'     ? 'block' : 'none';
   document.getElementById('harmonicPanel').style.display = m==='harmonic' ? 'block' : 'none';
   document.getElementById('sharePanel').style.display    = m==='share'    ? 'block' : 'none';
+  document.getElementById('rollPanel').style.display     = m==='roll'     ? 'block' : 'none';
+  document.getElementById('wavePanel').style.display     = m==='waves'    ? 'block' : 'none';
+  document.getElementById('historyPanel').style.display  = m==='history'  ? 'block' : 'none';
+  if (m==='roll')     setTimeout(initRollCanvas, 30);
+  if (m==='waves')    setTimeout(() => { initWavePanel(); drawWave(0); }, 30);
+  if (m==='history')  setTimeout(initHistoryPanel, 30);
 
   const showRange = m==='explore' || m==='compose';
   document.getElementById('rangeRow').style.display = showRange ? 'flex' : 'none';
@@ -2423,6 +3505,235 @@ function setMode(m) {
     document.getElementById('ivTrainerPanel').style.display = ivTab==='trainer' ? 'block' : 'none';
   }
   clearInfo(); redraw();
+}
+
+// ═══════════════════════════════════════════════════════════
+//  HISTORY OF MUSIC TIMELINE
+// ═══════════════════════════════════════════════════════════
+const HIST_ERAS = [
+  {
+    id: 'monophony',
+    icon: '🕊',
+    title: 'Monophony — One Voice, One Line',
+    date: '~500–900 CE',
+    blurb: 'Gregorian chant: a single unaccompanied melody, sung in unison.',
+    dotColor: '#9c7cdd',
+    body: `
+      <p>The earliest Western music we have detailed records of is <strong>Gregorian chant</strong> — sacred music of the Catholic Church, developed from roughly the 6th century onward. It consists of a single melodic line, sung by a group of monks in <em>unison</em>: everyone on the same note at the same time.</p>
+      <p style="margin-top:8px">The Church settled on a system of <strong>8 modes</strong> (the "church modes" — ancestors of our major and minor scales) using 7 distinct note steps. The notes had letter names but no fixed frequency — just relative distances. There was no harmony in the modern sense, no chords, no counterpoint.</p>
+      <div class="hist-fact">💡 In number notation, this sounds like playing 0 → 2 → 4 → 5 → 7 → 9 → 11 → 12 — the major scale — as a single flowing line, never two notes at once.</div>
+      <button class="hist-demo-btn" onclick="histPlayDemo('monophony')">▶ Hear a chant-style line</button>
+    `
+  },
+  {
+    id: 'octave',
+    icon: '👦👨',
+    title: 'The Octave Discovery — Boys & Men Sing Together',
+    date: '~800–1000 CE',
+    blurb: 'Boys’ and men’s voices naturally land an octave apart — the same note, doubled in frequency.',
+    dotColor: '#7a88dd',
+    body: `
+      <p>When boys and men sang the same "note" in unison, their voices actually differed by an <strong>octave</strong> — a 2:1 frequency ratio. A boy hitting A at 440 Hz and a man hitting A at 220 Hz. They perceived this as the same pitch, just higher or lower.</p>
+      <p style="margin-top:8px">This was humanity's first encounter with a <strong>musical interval</strong> — two different frequencies sounding so consonant they feel like one. The 2:1 ratio means the higher note's wave completes <em>exactly twice</em> for every one cycle of the lower, so they align perfectly.</p>
+      <div class="hist-fact">💡 In number notation: note 0 and note 12 are an octave. The ratio is 2/1 — the simplest possible, giving a composite period of just 1 cycle.</div>
+      <button class="hist-demo-btn" onclick="histPlayDemo('octave')">▶ Hear notes 0 and 12 together</button>
+    `
+  },
+  {
+    id: 'organum',
+    icon: '🎵🎶',
+    title: 'Organum — The First Harmony',
+    date: '~900–1200 CE',
+    blurb: 'A held "drone" note beneath a moving melody: the birth of two-voice music.',
+    dotColor: '#6698cc',
+    body: `
+      <p><strong>Organum</strong> was the first step toward harmony: a second voice added beneath (or above) the chant. In its simplest form, one singer holds a sustained <em>drone</em> — a single note that doesn't move — while the other sings the melody above it.</p>
+      <p style="margin-top:8px">The most common drone intervals were the <strong>perfect fifth</strong> (3:2 ratio, note 7 above root) and the <strong>perfect fourth</strong> (4:3 ratio, note 5 above root). These were chosen because they sounded stable and pure — their simple ratios meant the waves aligned frequently, producing little roughness.</p>
+      <div class="hist-fact">💡 The perfect fifth (0 + 7) has a 3:2 ratio. For every 2 cycles of the upper note, the lower completes 3 — they sync up constantly, which is why it sounds open and consonant.</div>
+      <button class="hist-demo-btn" onclick="histPlayDemo('organum')">▶ Hear a drone + moving melody</button>
+    `
+  },
+  {
+    id: 'polyphony',
+    icon: '🎼',
+    title: 'Polyphony — Multiple Independent Voices',
+    date: '~1100–1400 CE',
+    blurb: 'Two, three, four voices, each with its own melody line, woven together.',
+    dotColor: '#55aaaa',
+    body: `
+      <p>By the 12th–13th centuries (the <strong>Notre Dame school</strong> — Léonin, Pérotin), composers were writing music with two to four independent melodic lines, each moving on its own rhythm. This was <strong>polyphony</strong>: "many sounds."</p>
+      <p style="margin-top:8px">This raised a new question: which combinations of simultaneous notes sound good? Theorists classified intervals into <em>consonances</em> (octave, fifth, fourth) and <em>dissonances</em> (seconds, sevenths, tritones). Dissonances could be used, but needed to <em>resolve</em> — move to a consonance.</p>
+      <p style="margin-top:8px">The <strong>tritone</strong> (note 6, ratio ≈ 45:32) was called <em>diabolus in musica</em> — the devil in music — because its complex wave ratio created an unsettling, tense sound that the ear desperately wants to resolve.</p>
+      <div class="hist-fact">💡 Try notes 0 + 6 in the Waves tab — the complex LCM creates visible wave chaos. Then try 0 + 7 to feel the resolution.</div>
+      <button class="hist-demo-btn" onclick="histPlayDemo('polyphony')">▶ Hear tritone → fifth resolution</button>
+    `
+  },
+  {
+    id: 'thirds',
+    icon: '🎹',
+    title: 'The Rise of Thirds — Chords are Born',
+    date: '~1300–1600 CE',
+    blurb: 'The major third (5:4) and minor third (6:5) become accepted as consonant. The triad emerges.',
+    dotColor: '#66bb77',
+    body: `
+      <p>Early medieval theory considered only octaves, fifths, and fourths truly consonant. But by the late medieval and Renaissance periods, <strong>thirds</strong> became accepted — and even celebrated.</p>
+      <p style="margin-top:8px">The <strong>major third</strong> (notes 0 + 4) has a just ratio of 5:4. Stack a major third on top of a minor third (6:5), and you get a <strong>major triad</strong> — the foundational chord of Western music: notes 0, 4, and 7 together.</p>
+      <p style="margin-top:8px">English composers (<em>English discant</em>) and later Franco-Flemish polyphonists normalized thirds in their writing, and theorists eventually reclassified them as "imperfect consonances" — stable enough to end on, but with more color than the bare fifth.</p>
+      <div class="hist-fact">💡 Notes 0 + 4 + 7: the C major triad. The ratios 5:4 and 3:2 give a composite period that's large but not chaotic — consonant, with warmth.</div>
+      <button class="hist-demo-btn" onclick="histPlayDemo('thirds')">▶ Hear 0 → 0+4 → 0+4+7</button>
+    `
+  },
+  {
+    id: 'equal_temp',
+    icon: '⚖️',
+    title: 'Equal Temperament — F♯ Meets G♭',
+    date: '~1550–1750 CE',
+    blurb: '12 notes, all equally spaced. Every key sounds the same. F♯ and G♭ become one note.',
+    dotColor: '#ddaa44',
+    body: `
+      <p>A fundamental problem: in <strong>pure just intonation</strong>, the ratios are beautiful, but they don't add up perfectly around the circle of fifths. Stack 12 perfect fifths (3:2 each) and you land slightly <em>sharp</em> of 7 octaves — a gap called the <strong>Pythagorean comma</strong>.</p>
+      <p style="margin-top:8px">This meant keyboards tuned for one key sounded terrible in another. So composers either limited themselves to a few keys, or used <em>meantone</em> temperaments — compromises that made some keys tolerable at the expense of others.</p>
+      <p style="margin-top:8px">The solution: <strong>12-tone equal temperament</strong>. Each octave is divided into 12 <em>exactly equal</em> semitones, each a ratio of 2^(1/12) ≈ 1.05946. Every fifth is now 2^(7/12) ≈ 1.4983 — just barely flat of 3:2, but the error distributes equally across all 12 keys. <strong>F♯ and G♭ are literally the same key.</strong></p>
+      <p style="margin-top:8px">J.S. Bach's <em>Well-Tempered Clavier</em> (1722) celebrated this by writing in all 24 major and minor keys — a musical proof that equal temperament worked.</p>
+      <div class="hist-fact">💡 In this app, all 12 notes within an octave are equally spaced — this is equal temperament. The "just" ratios are shown in the Waves tab as an approximation of the pure ratios.</div>
+      <button class="hist-demo-btn" onclick="histPlayDemo('equal_temp')">▶ Hear the chromatic scale</button>
+    `
+  },
+  {
+    id: 'hz',
+    icon: '📡',
+    title: 'Scientific Pitch — A4 = 440 Hz',
+    date: '1636–1955 CE',
+    blurb: 'Music is tied to exact frequencies. The world standardizes on A4 = 440 Hz.',
+    dotColor: '#cc6655',
+    body: `
+      <p>In 1636, French mathematician <strong>Marin Mersenne</strong> published <em>Harmonie Universelle</em> — the first measurement of the absolute frequency of a musical note. He calculated that a specific string length vibrated at ~84 Hz. Music was now a branch of physics.</p>
+      <p style="margin-top:8px">Throughout the 18th and 19th centuries, pitch crept upward. Handel's tuning fork (1751) corresponds to A4 ≈ 422 Hz. By the late 1800s, some orchestras were using A4 = 452 Hz or higher — strings tuned tighter for a brighter, more brilliant sound, but increasingly incompatible with each other and with singers' voices.</p>
+      <p style="margin-top:8px">In <strong>1939</strong>, an international conference in London agreed on <strong>A4 = 440 Hz</strong> as a standard. This was confirmed as the ISO standard in <strong>1955</strong> (ISO 16). With 440 Hz as the anchor and equal temperament defining all ratios, every note in the 12-tone system now has an exact, universally agreed frequency.</p>
+      <p style="margin-top:8px">Middle C (our note 0) = 261.63 Hz. Every note <em>n</em> steps away: <strong>261.63 × 2^(n/12)</strong>.</p>
+      <div class="hist-fact">💡 This app uses BASE_FREQ = 261.63 Hz for note 0. Note 7 (perfect fifth) = 261.63 × 2^(7/12) ≈ 392 Hz. The math is exact and universal.</div>
+      <button class="hist-demo-btn" onclick="histPlayDemo('hz')">▶ Hear notes 0–12 with their Hz</button>
+    `
+  }
+];
+
+let histInited = false;
+let histOpenIdx = -1;
+
+function initHistoryPanel() {
+  if (histInited) return;
+  histInited = true;
+  const container = document.getElementById('histTimeline');
+  container.innerHTML = '';
+  HIST_ERAS.forEach((era, idx) => {
+    const div = document.createElement('div');
+    div.className = 'hist-era';
+    div.id = `hist-era-${idx}`;
+    div.style.setProperty('--dot-color', era.dotColor);
+    div.innerHTML = `
+      <div class="hist-era-head" onclick="histToggle(${idx})">
+        <span class="hist-era-icon">${era.icon}</span>
+        <div>
+          <div class="hist-era-title">${era.title}</div>
+          <div class="hist-era-blurb">${era.blurb}</div>
+        </div>
+        <span class="hist-era-date">${era.date}</span>
+      </div>
+      <div class="hist-era-body">${era.body}</div>
+    `;
+    container.appendChild(div);
+  });
+  // Open the first era by default
+  histToggle(0);
+}
+
+function histToggle(idx) {
+  HIST_ERAS.forEach((_, i) => {
+    const el = document.getElementById(`hist-era-${i}`);
+    if (!el) return;
+    if (i === idx) {
+      const wasOpen = el.classList.contains('open');
+      el.classList.toggle('open', !wasOpen);
+      histOpenIdx = wasOpen ? -1 : idx;
+    } else {
+      el.classList.remove('open');
+    }
+  });
+  // Scroll into view
+  const el = document.getElementById(`hist-era-${idx}`);
+  if (el && el.classList.contains('open')) {
+    setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
+  }
+}
+
+function histNext() {
+  const next = (histOpenIdx + 1) % HIST_ERAS.length;
+  histToggle(next);
+}
+
+function histPrev() {
+  const prev = (histOpenIdx - 1 + HIST_ERAS.length) % HIST_ERAS.length;
+  histToggle(prev);
+}
+
+function histCloseAll() {
+  HIST_ERAS.forEach((_, i) => {
+    const el = document.getElementById(`hist-era-${i}`);
+    if (el) el.classList.remove('open');
+  });
+  histOpenIdx = -1;
+}
+
+function histPlayDemo(eraId) {
+  const ctx = getAudioCtx();
+  const demos = {
+    monophony: [0, 2, 4, 5, 7, 9, 11, 12],
+    octave:    [0, 12, null, 0, 12],
+    organum:   [0, 2, 4, 5, 4, 2, 0],
+    polyphony: [0, 4, 7, 9, 7, 5],
+    thirds:    [0, 4, 7],
+    equal_temp:[0,1,2,3,4,5,6,7,8,9,10,11,12],
+    hz:        [0,2,4,5,7,9,11,12]
+  };
+  const notes = demos[eraId] || [0,4,7];
+  const bpm = 120, beatSec = 60 / bpm;
+
+  if (eraId === 'octave') {
+    // Play 0 and 12 simultaneously
+    const t = ctx.currentTime + 0.05;
+    playNote(0, 0.9, t);
+    playNote(12, 0.9, t);
+    playNote(0, 0.9, t + 1.0);
+    playNote(12, 0.9, t + 1.0);
+  } else if (eraId === 'organum') {
+    // Drone on 0, melody moves
+    const melody = [0, 2, 4, 5, 4, 2, 0];
+    const t0 = ctx.currentTime + 0.05;
+    melody.forEach((n, i) => {
+      playNote(0, 0.5, t0 + i * beatSec * 0.8);
+      playNote(n + 7, 0.8, t0 + i * beatSec * 0.8);
+    });
+  } else if (eraId === 'polyphony') {
+    // tritone then resolution: 0+6 → 0+7
+    const t = ctx.currentTime + 0.05;
+    playNote(0, 1.0, t);
+    playNote(6, 1.0, t);
+    playNote(0, 1.0, t + 1.1);
+    playNote(7, 1.0, t + 1.1);
+  } else if (eraId === 'thirds') {
+    const t = ctx.currentTime + 0.05;
+    playNote(0, 0.9, t);
+    setTimeout(() => { playNote(0,0.8); playNote(4,0.8); }, 700);
+    setTimeout(() => { playNote(0,0.8); playNote(4,0.8); playNote(7,0.8); }, 1400);
+  } else {
+    // Sequential melody
+    notes.forEach((n, i) => {
+      if (n !== null) {
+        const t = ctx.currentTime + 0.05 + i * beatSec * 0.7;
+        playNote(n, 0.8, t);
+      }
+    });
+  }
 }
 
 // ═══════════════════════════════════════════════════════════
