@@ -2,9 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>7-Line Staff Explorer</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
+button, input, select, a { touch-action: manipulation; }
 body {
   font-family: 'Segoe UI', system-ui, sans-serif;
   background: #f0f0f8;
@@ -359,6 +361,26 @@ h1 { font-size: 1.55rem; color: #5030bb; margin-bottom: 5px; letter-spacing: 0.0
 }
 .hist-nav { display:flex; justify-content:center; gap:10px; margin-top:4px; flex-wrap:wrap; }
 .hist-nav .btn { font-size:0.78rem; padding:5px 12px; }
+
+/* ── Compare tab ── */
+#comparePanel { margin-top: 10px; }
+.cmp-intro { font-size:0.84rem; color:#888; text-align:center; margin-bottom:14px; line-height:1.55; }
+.cmp-controls { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin-bottom:14px; align-items:center; }
+.cmp-controls .tlabel { font-size:0.78rem; color:#aaa; }
+#compareCanvas { display:block; width:100%; border-radius:10px; background:#f8f8ff; border:1px solid #e0e0f0; cursor:pointer; }
+.cmp-legend {
+  display:flex; gap:20px; flex-wrap:wrap; justify-content:center;
+  margin-top:12px; font-size:0.8rem; color:#888;
+}
+.cmp-legend-item { display:flex; align-items:center; gap:5px; }
+.cmp-legend-dot  { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+.cmp-note-list { margin-top:10px; text-align:center; font-size:0.82rem; color:#666; min-height:20px; }
+.cmp-callout {
+  margin-top:14px; padding:10px 14px;
+  background:#f8f8ff; border-radius:8px; border-left:3px solid #9070dd;
+  font-size:0.82rem; color:#555; line-height:1.6;
+}
+.cmp-callout strong { color:#333; }
 .roll-controls { display: flex; gap: 8px; margin-bottom: 10px; align-items: center; flex-wrap: wrap; }
 #rollCanvas {
   display: block; width: 100%; border-radius: 10px;
@@ -377,6 +399,181 @@ h1 { font-size: 1.55rem; color: #5030bb; margin-bottom: 5px; letter-spacing: 0.0
   flex-wrap: wrap; font-size: 0.75rem; color: #aaa;
 }
 .key-legend span { display: flex; align-items: center; gap: 5px; }
+
+/* ── Sonic Space tab ── */
+#sonicPanel { margin-top: 10px; }
+.sonic-mode-row { display:flex; gap:8px; justify-content:center; margin-bottom:14px; flex-wrap:wrap; }
+.sonic-sources { display:flex; gap:7px; flex-wrap:wrap; justify-content:center; margin-bottom:12px; }
+.sonic-src-btn {
+  display:flex; align-items:center; gap:5px;
+  padding:5px 11px; border-radius:20px;
+  border:2px solid transparent; background:#fff;
+  font-size:0.78rem; cursor:pointer; transition:all 0.14s;
+  color:#666;
+}
+.sonic-src-btn .src-dot { width:9px; height:9px; border-radius:50%; flex-shrink:0; }
+.sonic-src-btn.active { color:#222; font-weight:600; }
+.sonic-src-btn.inactive { opacity:0.38; }
+.sonic-src-btn:active { transform:scale(0.95); }
+#sonicCanvas { display:block; width:100%; border-radius:10px; background:#0d0d1a; cursor:pointer; }
+.sonic-play-row { display:flex; gap:8px; justify-content:center; margin-top:12px; flex-wrap:wrap; }
+.sonic-info {
+  margin-top:12px; padding:11px 14px;
+  background:#f8f8ff; border-radius:8px;
+  border-left:3px solid #9070dd;
+  font-size:0.81rem; color:#555; line-height:1.65;
+}
+.sonic-info strong { color:#333; }
+.sonic-view-row { display:flex; gap:6px; justify-content:center; margin-bottom:10px; }
+
+/* ══════════════════════════════════════════════
+   MOBILE-RESPONSIVE STYLES
+   Breakpoints: 600px (small phone), 780px (tablet)
+══════════════════════════════════════════════ */
+
+/* Scrollable tab bar — single row on mobile */
+@media (max-width: 780px) {
+  .tabs {
+    display: flex; flex-wrap: nowrap; overflow-x: auto;
+    justify-content: flex-start; gap: 5px;
+    padding-bottom: 6px; margin-bottom: 14px;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab {
+    flex-shrink: 0; white-space: nowrap;
+    padding: 7px 12px; font-size: 0.78rem;
+    /* bigger tap target */
+    min-height: 36px;
+  }
+}
+
+@media (max-width: 600px) {
+  body { padding: 14px 10px 32px; }
+  h1 { font-size: 1.25rem; }
+  .subtitle { font-size: 0.76rem; margin-bottom: 12px; }
+
+  .card { padding: 12px 12px 16px; border-radius: 10px; }
+
+  /* Key row — compact on phone */
+  .key-row { gap: 7px; padding: 8px 10px; }
+  .key-section-label { font-size: 0.7rem; min-width: 20px; }
+  .key-btn { min-width: 30px; height: 32px; font-size: 0.78rem; }
+  .key-nudge { width: 30px; height: 30px; font-size: 1.1rem; }
+  .key-divider { display: none; }
+  .key-name-display { font-size: 0.72rem; }
+  #transposeDisplay { font-size: 0.88rem; }
+
+  /* Instrument buttons — wrap and slightly larger */
+  .instr-btn { padding: 5px 10px; font-size: 0.76rem; min-height: 32px; }
+
+  /* Range row */
+  .range-row { gap: 6px; padding: 7px 10px; }
+  .range-btn { padding: 5px 10px; min-height: 32px; font-size: 0.76rem; }
+
+  /* Theory controls */
+  .theory-row { gap: 5px; }
+  .tlabel { font-size: 0.7rem; min-width: 34px; }
+  .opt-btn { padding: 5px 9px; font-size: 0.76rem; min-height: 32px; }
+
+  /* Duration row */
+  .dur-row { gap: 5px; }
+  .dur-btn { padding: 5px 9px; font-size: 0.76rem; min-height: 32px; }
+  .bpm-slider { width: 70px; }
+  .bpm-group { gap: 4px; }
+
+  /* Buttons */
+  .btn { padding: 8px 14px; min-height: 36px; font-size: 0.82rem; }
+  .controls { gap: 8px; }
+
+  /* Info bar */
+  .info-bar { font-size: 0.8rem; }
+
+  /* Intervals — 1 column on small phone */
+  .interval-grid { grid-template-columns: 1fr; }
+
+  /* Interval trainer choices — 2 columns instead of 4 */
+  .iv-choices { grid-template-columns: repeat(2, 1fr); gap: 6px; }
+  .iv-choice { padding: 10px 4px; }
+
+  /* Play input */
+  .play-input { font-size: 0.92rem; min-width: 160px; }
+
+  /* Share panel */
+  .share-notation { font-size: 0.8rem; }
+
+  /* Wave buttons — slightly larger for touch */
+  .wave-note-btn { width: 36px; height: 36px; }
+
+  /* Roll canvas — shorter on phone */
+  #rollCanvas { max-height: 320px; }
+
+  /* Roll controls */
+  .roll-controls { gap: 6px; }
+
+  /* History timeline — less indent on phone */
+  .hist-timeline { padding-left: 28px; }
+  .hist-era-head { gap: 7px; }
+  .hist-era-date { display: none; } /* hide date on narrow screens */
+  .hist-era-title { font-size: 0.88rem; }
+  .hist-era-blurb { font-size: 0.78rem; }
+  .hist-era-body { font-size: 0.8rem; }
+  .hist-era-icon { font-size: 1.2rem; }
+
+  /* Compare canvas — taller to stack staves */
+  #compareCanvas { height: auto !important; }
+
+  /* Key legend */
+  .key-legend { gap: 10px; font-size: 0.7rem; margin-top: 14px; }
+
+  /* Trainer meta */
+  .trainer-meta { gap: 6px; padding: 8px 10px; }
+  .trainer-score { font-size: 0.9rem; }
+  .iv-question-area { font-size: 1.3rem; }
+  .iv-question-area .q-root { font-size: 1.5rem; }
+
+  /* Harmonic root buttons */
+  #harmonicRootBtns .opt-btn { font-size: 0.72rem; padding: 4px 7px; }
+
+  /* Scale buttons — smaller on phone */
+  [id^="sbt-"] { font-size: 0.74rem; padding: 4px 8px; min-height: 30px; }
+
+  /* Circle/clock SVG — give full width */
+  #circleSvg, #clockSvg { touch-action: none; }
+}
+
+/* Tablet tweaks */
+@media (min-width: 601px) and (max-width: 780px) {
+  body { padding: 18px 12px 36px; }
+  .card { padding: 14px 16px 18px; }
+  .interval-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+  .iv-choices { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* Touch-specific: remove hover effects that don't make sense on touch */
+@media (hover: none) {
+  .tab:hover, .btn:hover, .opt-btn:hover, .key-btn:hover,
+  .dur-btn:hover, .range-btn:hover, .instr-btn:hover,
+  .iv-card:hover, .hist-era:hover, .wave-note-btn:hover {
+    /* reset hover styles so they don't stick after tap */
+    background: initial; border-color: initial; color: initial;
+    box-shadow: none; transform: none;
+  }
+  /* Keep active styles for touch feedback */
+  .tab.active { background: #5030bb; color: #fff; border-color: #5030bb; }
+  .btn.primary { background: #f4f0ff; border-color: #7060cc; color: #5030bb; }
+  .opt-btn.active { background: #f0ecff; border-color: #7060cc; color: #5030bb; }
+  .key-btn.active { background: #f0ecff; border-color: #7060cc; color: #5030bb; }
+  .dur-btn.active { background: #f0ecff; border-color: #7060cc; color: #5030bb; }
+
+  /* Tap highlight for better touch feedback */
+  .tab:active, .btn:active, .opt-btn:active, .key-btn:active,
+  .dur-btn:active, .iv-card:active, .hist-era-head:active,
+  .hist-demo-btn:active, .wave-note-btn:active {
+    opacity: 0.75; transform: scale(0.97);
+  }
+}
 </style>
 </head>
 <body>
@@ -398,6 +595,8 @@ h1 { font-size: 1.55rem; color: #5030bb; margin-bottom: 5px; letter-spacing: 0.0
   <button class="tab"         onclick="setMode('waves')">〰 Waves</button>
   <button class="tab"         onclick="setMode('roll')">🎞 Roll</button>
   <button class="tab"         onclick="setMode('history')">📜 History</button>
+  <button class="tab"         onclick="setMode('compare')">⚖️ Compare</button>
+  <button class="tab"         onclick="setMode('sonic')">🌊 Sonic Space</button>
 </div>
 
 <div class="card">
@@ -759,6 +958,62 @@ h1 { font-size: 1.55rem; color: #5030bb; margin-bottom: 5px; letter-spacing: 0.0
       Notes fall toward the <strong>staff strip</strong> at the bottom. Each note plays as it hits the line.
       The <strong>x-axis</strong> shows pitch (note numbers, color-coded by pitch class).
       Compose or type notes in other tabs, then come back here to watch them roll.
+    </div>
+  </div>
+
+  <!-- Sonic Space panel -->
+  <div id="sonicPanel" style="display:none;margin-top:10px">
+    <div class="sonic-mode-row">
+      <button class="btn primary active" id="sonic-band-btn" onclick="setSonicMode('band')">🎸 Rock Band</button>
+      <button class="btn"               id="sonic-forest-btn" onclick="setSonicMode('forest')">🌲 Forest</button>
+    </div>
+    <div class="sonic-view-row">
+      <button class="opt-btn active" id="sonic-view-rows"    onclick="setSonicView('rows')">Rows</button>
+      <button class="opt-btn"        id="sonic-view-overlay" onclick="setSonicView('overlay')">Overlay</button>
+    </div>
+    <div class="sonic-sources" id="sonicSources"></div>
+    <canvas id="sonicCanvas" height="320"></canvas>
+    <div class="sonic-play-row">
+      <button class="btn primary" id="sonicPlayAllBtn"  onclick="sonicPlayAll()">▶ Play all active</button>
+      <button class="btn"         id="sonicStopBtn"     onclick="sonicStopAll()">■ Stop</button>
+    </div>
+    <div class="sonic-info" id="sonicInfo">
+      Click any source above to toggle it on/off. Press <strong>▶ Play all active</strong> to hear them layered together.
+    </div>
+  </div>
+
+  <!-- Compare panel -->
+  <div id="comparePanel" style="display:none;margin-top:10px">
+    <p class="cmp-intro">
+      The same notes, shown on both a <strong>traditional 5-line staff</strong> and this app's <strong>7-line staff</strong>.<br>
+      Click any note to highlight it on both staves simultaneously.
+    </p>
+    <div class="cmp-controls">
+      <span class="tlabel">Show</span>
+      <button class="opt-btn active" id="cmp-major"  onclick="setCmpScale('major')">Major scale</button>
+      <button class="opt-btn"        id="cmp-minor"  onclick="setCmpScale('minor')">Minor scale</button>
+      <button class="opt-btn"        id="cmp-pent"   onclick="setCmpScale('pentatonic')">Pentatonic</button>
+      <button class="opt-btn"        id="cmp-chrom"  onclick="setCmpScale('chromatic')">Chromatic</button>
+      <button class="opt-btn"        id="cmp-chord"  onclick="setCmpScale('chord')">Major chord</button>
+      <div class="key-divider"></div>
+      <span class="tlabel">Animate</span>
+      <button class="btn" id="cmpPlayBtn" onclick="cmpPlay()">▶ Play</button>
+      <button class="btn" onclick="cmpStop()">■ Stop</button>
+    </div>
+    <canvas id="compareCanvas" height="460"></canvas>
+    <div class="cmp-note-list" id="cmpNoteList"></div>
+    <div class="cmp-legend">
+      <span class="cmp-legend-item"><span class="cmp-legend-dot" style="background:#88aacc"></span> Staff lines (both)</span>
+      <span class="cmp-legend-item"><span class="cmp-legend-dot" style="background:#bbbbcc;border:1px dashed #9090bb"></span> Dotted lines (7-line only)</span>
+      <span class="cmp-legend-item"><span class="cmp-legend-dot" style="background:#ddddee"></span> Ledger lines (notes outside staff)</span>
+      <span class="cmp-legend-item"><span class="cmp-legend-dot" style="background:#c080ff"></span> Highlighted note</span>
+    </div>
+    <div class="cmp-callout">
+      <strong>Why 7 lines?</strong> The traditional 5-line staff fits notes 0–12 with ledger lines for extremes.
+      The 7-line staff adds lines at positions 0 and 12 (middle C and the octave above),
+      so the full octave sits <em>entirely on the staff</em> — no ledger lines needed for any scale note.
+      Each line is a whole step; each gap is also a whole step. Accidentals (sharps/flats) are eliminated:
+      every semitone gets its own unambiguous position.
     </div>
   </div>
 
@@ -1556,18 +1811,32 @@ function drawCompose() {
 
   for (let s=0; s<SLOTS; s++) {
     for (let n=viewMin; n<=viewMax; n++) {
-      const zone = E('rect', { x:SL+s*slotW+1, y:noteY(n)-currentSemitone/2, width:slotW-2, height:currentSemitone, fill:'transparent', style:'cursor:crosshair' });
+      const hasNote = composeNotes.some(x => x.n===n && x.slot===s);
+      const cursor = hasNote ? 'pointer' : 'crosshair';
+      const zone = E('rect', { x:SL+s*slotW+1, y:noteY(n)-currentSemitone/2, width:slotW-2, height:currentSemitone, fill:'transparent', style:`cursor:${cursor}` });
       zone.addEventListener('click', () => toggleNote(n,s));
       zone.addEventListener('mouseenter', () => {
-        const durLabel = selectedDur === 'rest' ? 'rest' : `${selectedDur} note`;
-        setInfo(`<span style="color:${noteColor(n)}">○</span>&ensp;Click to place ${durLabel} at <strong>${n}</strong> (${noteName(n)})${transpose?` → ${actualName(n)}`:''}`);
+        const placed = composeNotes.some(x => x.n===n && x.slot===s);
+        if (placed) {
+          setInfo(`<span style="color:${noteColor(n)}">●</span>&ensp;<strong>Click to remove</strong> note at position <strong>${n}</strong> (${noteName(n)}) — slot ${s+1}`);
+        } else {
+          const durLabel = selectedDur === 'rest' ? 'rest' : `${selectedDur} note`;
+          setInfo(`<span style="color:${noteColor(n)}">○</span>&ensp;Click to place ${durLabel} at <strong>${n}</strong> (${noteName(n)})${transpose?` → ${actualName(n)}`:''}`);
+        }
       });
       zone.addEventListener('mouseleave', clearInfo);
     }
   }
 
+  // Draw placed notes
   composeNotes.filter(({n}) => n >= viewMin && n <= viewMax)
-    .forEach(({n, slot, dur}) => drawNoteShape(n, SL+(slot+0.5)*slotW, dur || 'quarter'));
+    .forEach(({n, slot, dur}) => {
+      const cx = SL+(slot+0.5)*slotW;
+      drawNoteShape(n, cx, dur || 'quarter');
+      // Small remove hint ring — a faint circle overlay so user knows it's clickable to remove
+      const ry = noteY(n);
+      E('circle', { cx, cy:ry, r: NR+4, fill:'none', stroke: noteColor(n), 'stroke-width':'0.7', opacity:'0.35', style:'pointer-events:none' });
+    });
 
   drawLegend();
 }
@@ -3471,11 +3740,11 @@ function redraw() {
 
 function setMode(m) {
   stopMelody(); theoryAnim=false; stopPlay(); stopRoll(); stopWaveAnim(); mode=m;
-  const ALL_MODES = ['explore','melody','compose','theory','intervals','circle','clock','play','harmonic','share','waves','roll','history'];
+  const ALL_MODES = ['explore','melody','compose','theory','intervals','circle','clock','play','harmonic','share','waves','roll','history','compare','sonic'];
   document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', ALL_MODES[i]===m));
 
   // Staff SVG: visible except circle, clock, share, roll, waves, history and intervals-trainer sub-tab
-  const staffVisible = !['circle','clock','share','roll','waves','history'].includes(m) && !(m==='intervals' && ivTab==='trainer');
+  const staffVisible = !['circle','clock','share','roll','waves','history','compare','sonic'].includes(m) && !(m==='intervals' && ivTab==='trainer');
   document.getElementById('staffSvg').style.display = staffVisible ? 'block' : 'none';
   document.getElementById('infoBar').style.display = staffVisible ? 'block' : 'none';
 
@@ -3491,9 +3760,14 @@ function setMode(m) {
   document.getElementById('rollPanel').style.display     = m==='roll'     ? 'block' : 'none';
   document.getElementById('wavePanel').style.display     = m==='waves'    ? 'block' : 'none';
   document.getElementById('historyPanel').style.display  = m==='history'  ? 'block' : 'none';
+  document.getElementById('comparePanel').style.display  = m==='compare'  ? 'block' : 'none';
+  document.getElementById('sonicPanel').style.display    = m==='sonic'    ? 'block' : 'none';
   if (m==='roll')     setTimeout(initRollCanvas, 30);
   if (m==='waves')    setTimeout(() => { initWavePanel(); drawWave(0); }, 30);
   if (m==='history')  setTimeout(initHistoryPanel, 30);
+  if (m==='compare')  setTimeout(initCompareCanvas, 30);
+  if (m==='sonic')    setTimeout(initSonicPanel, 30);
+  if (m!=='sonic')    sonicStopAll();
 
   const showRange = m==='explore' || m==='compose';
   document.getElementById('rangeRow').style.display = showRange ? 'flex' : 'none';
@@ -3505,6 +3779,1025 @@ function setMode(m) {
     document.getElementById('ivTrainerPanel').style.display = ivTab==='trainer' ? 'block' : 'none';
   }
   clearInfo(); redraw();
+}
+
+// ═══════════════════════════════════════════════════════════
+//  SONIC SPACE TAB
+// ═══════════════════════════════════════════════════════════
+
+// Log-scale frequency helper: maps Hz to 0..1 across 20Hz–20kHz
+const SONIC_FMIN = 20, SONIC_FMAX = 20000;
+function freqX(f, W) {
+  return (Math.log10(f) - Math.log10(SONIC_FMIN)) /
+         (Math.log10(SONIC_FMAX) - Math.log10(SONIC_FMIN)) * W;
+}
+
+// Each source: { id, label, emoji, fLow, fHigh, hLow, hHigh, color, active, desc, synthesize }
+// fLow/fHigh = fundamental/primary band; hLow/hHigh = harmonic/presence band (optional)
+const SONIC_MODES_DATA = {
+  band: {
+    label: 'Rock Band',
+    blurb: 'In a well-mixed rock band, each instrument occupies a distinct frequency zone — a natural division of sonic labor. Producers "cut space" for each part so nothing masks anything else.',
+    sources: [
+      {
+        id:'kick', label:'Kick Drum', emoji:'🥁', loopMs:500,
+        fLow:40, fHigh:100, hLow:2000, hHigh:5000,
+        color:'#ff6030',
+        desc:'The kick anchors the low end. Its chest-thump is 40–100 Hz; the click/attack lives at 2–5 kHz, cutting through a full mix.',
+        synthesize(ctx) {
+          const g = ctx.createGain();
+          g.gain.setValueAtTime(0.9, ctx.currentTime);
+          g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
+          const osc = ctx.createOscillator();
+          osc.frequency.setValueAtTime(120, ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(40, ctx.currentTime + 0.15);
+          osc.connect(g); g.connect(ctx.destination);
+          osc.start(); osc.stop(ctx.currentTime + 0.5);
+          return [osc, g];
+        }
+      },
+      {
+        id:'bass', label:'Bass Guitar', emoji:'🎸', loopMs:1900,
+        fLow:41, fHigh:300, hLow:300, hHigh:900,
+        color:'#7040ff',
+        desc:'Bass guitar spans 41–300 Hz for the fundamental notes, with harmonics giving "growl" up to ~900 Hz. It fills the low-mid gap between kick and guitar.',
+        synthesize(ctx) {
+          const nodes = [];
+          const gain = ctx.createGain();
+          gain.gain.setValueAtTime(0.0, ctx.currentTime);
+          gain.gain.linearRampToValueAtTime(0.55, ctx.currentTime + 0.04);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.8);
+          const lp = ctx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=450; lp.Q.value=1.2;
+          [41, 82, 123].forEach(f => {
+            const o = ctx.createOscillator(); o.type='sawtooth'; o.frequency.value=f;
+            const g2 = ctx.createGain(); g2.gain.value = f===41 ? 0.6 : f===82 ? 0.3 : 0.1;
+            o.connect(g2); g2.connect(lp); nodes.push(o); o.start(); o.stop(ctx.currentTime+1.8);
+          });
+          lp.connect(gain); gain.connect(ctx.destination);
+          nodes.push(gain, lp);
+          return nodes;
+        }
+      },
+      {
+        id:'rhythm', label:'Rhythm Guitar', emoji:'🎵', loopMs:1400,
+        fLow:82, fHigh:2000, hLow:2000, hHigh:6000,
+        color:'#2288ff',
+        desc:'Rhythm guitar covers the mid frequencies (82–2000 Hz) where most of its chord energy sits, with grit and definition extending to 6 kHz. It forms the harmonic backbone.',
+        synthesize(ctx) {
+          const nodes = [];
+          const gain = ctx.createGain();
+          gain.gain.setValueAtTime(0, ctx.currentTime);
+          gain.gain.linearRampToValueAtTime(0.35, ctx.currentTime + 0.02);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.2);
+          const lp = ctx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=3000;
+          const dist = ctx.createWaveShaper();
+          const curve = new Float32Array(256);
+          for(let i=0;i<256;i++){const x=i*2/256-1; curve[i]=Math.tanh(x*4)*0.7;}
+          dist.curve=curve;
+          // A major chord: A3 E4 A4
+          [220, 330, 440, 554].forEach((f,i) => {
+            const o = ctx.createOscillator(); o.type='sawtooth'; o.frequency.value=f;
+            const g2=ctx.createGain(); g2.gain.value=0.4;
+            o.connect(g2); g2.connect(dist); nodes.push(o); o.start(); o.stop(ctx.currentTime+1.2);
+          });
+          dist.connect(lp); lp.connect(gain); gain.connect(ctx.destination);
+          nodes.push(gain,lp,dist);
+          return nodes;
+        }
+      },
+      {
+        id:'lead', label:'Lead Guitar', emoji:'🎶', loopMs:1100,
+        fLow:200, fHigh:5000, hLow:5000, hHigh:10000,
+        color:'#00ccee',
+        desc:'Lead guitar cuts through the mix with a bright 200 Hz–5 kHz range. Its "presence" and note attack live at 2–5 kHz — above the rhythm guitar, below the cymbals.',
+        synthesize(ctx) {
+          const nodes = [];
+          const gain = ctx.createGain();
+          gain.gain.setValueAtTime(0,ctx.currentTime);
+          gain.gain.linearRampToValueAtTime(0.4, ctx.currentTime+0.01);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+1.0);
+          const vib = ctx.createOscillator(); vib.frequency.value=5.5;
+          const vibGain = ctx.createGain(); vibGain.gain.value=4;
+          vib.connect(vibGain);
+          const osc = ctx.createOscillator(); osc.type='sawtooth'; osc.frequency.value=660;
+          vibGain.connect(osc.frequency);
+          const hp = ctx.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=250;
+          osc.connect(hp); hp.connect(gain); gain.connect(ctx.destination);
+          vib.start(); vib.stop(ctx.currentTime+1.0);
+          osc.start(); osc.stop(ctx.currentTime+1.0);
+          nodes.push(vib,vibGain,osc,hp,gain);
+          return nodes;
+        }
+      },
+      {
+        id:'vocals', label:'Vocals', emoji:'🎤', loopMs:1500,
+        fLow:80, fHigh:1100, hLow:1100, hHigh:8000,
+        color:'#ff44aa',
+        desc:'Human vocals span 80–1100 Hz for the fundamental pitch, with formant harmonics and "presence" (consonants, air) extending to 8 kHz. Vocals sit in the warmest, most emotionally resonant part of the spectrum.',
+        synthesize(ctx) {
+          const nodes = [];
+          const gain = ctx.createGain();
+          gain.gain.setValueAtTime(0,ctx.currentTime);
+          gain.gain.linearRampToValueAtTime(0.42,ctx.currentTime+0.08);
+          gain.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+1.4);
+          // formant-like: multiple oscillators at vowel formant frequencies
+          const vib = ctx.createOscillator(); vib.frequency.value=5;
+          const vibG = ctx.createGain(); vibG.gain.value=3;
+          vib.connect(vibG);
+          [[300,0.7],[730,0.4],[1090,0.2],[2440,0.06]].forEach(([f,amp])=>{
+            const o=ctx.createOscillator(); o.type='sine'; o.frequency.value=f;
+            vibG.connect(o.frequency);
+            const g2=ctx.createGain(); g2.gain.value=amp;
+            o.connect(g2); g2.connect(gain); nodes.push(o,g2); o.start(); o.stop(ctx.currentTime+1.4);
+          });
+          vib.start(); vib.stop(ctx.currentTime+1.4);
+          gain.connect(ctx.destination); nodes.push(vib,vibG,gain);
+          return nodes;
+        }
+      },
+      {
+        id:'snare', label:'Snare Drum', emoji:'🥁', loopMs:1000,
+        fLow:100, fHigh:300, hLow:2000, hHigh:8000,
+        color:'#ffcc00',
+        desc:'The snare\'s body (100–300 Hz) gives it crack and weight; the snare-wire buzz and stick attack at 2–8 kHz add the signature "snap" that cuts through any dense mix.',
+        synthesize(ctx) {
+          const nodes = [];
+          const gain = ctx.createGain();
+          gain.gain.setValueAtTime(0.7, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+0.2);
+          const buf = ctx.createBuffer(1, ctx.sampleRate*0.2, ctx.sampleRate);
+          const d = buf.getChannelData(0);
+          for(let i=0;i<d.length;i++) d[i]=(Math.random()*2-1);
+          const noise = ctx.createBufferSource(); noise.buffer=buf;
+          const bp = ctx.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=3000; bp.Q.value=0.8;
+          const osc = ctx.createOscillator(); osc.frequency.value=200;
+          const oscG = ctx.createGain(); oscG.gain.setValueAtTime(0.5,ctx.currentTime); oscG.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.1);
+          osc.connect(oscG); oscG.connect(gain);
+          noise.connect(bp); bp.connect(gain); gain.connect(ctx.destination);
+          noise.start(); noise.stop(ctx.currentTime+0.2);
+          osc.start(); osc.stop(ctx.currentTime+0.2);
+          nodes.push(noise,bp,osc,oscG,gain);
+          return nodes;
+        }
+      },
+      {
+        id:'hihat', label:'Hi-Hat / Cymbals', emoji:'✨', loopMs:300,
+        fLow:4000, fHigh:20000, hLow:null, hHigh:null,
+        color:'#aaddff',
+        desc:'Cymbals live entirely in the high frequencies (4–20 kHz). Their shimmer and "air" fills the top of the spectrum that no other rock instrument reaches — giving the mix sparkle and space.',
+        synthesize(ctx) {
+          const nodes = [];
+          const gain = ctx.createGain();
+          gain.gain.setValueAtTime(0.5, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+0.18);
+          const buf = ctx.createBuffer(1, ctx.sampleRate*0.18, ctx.sampleRate);
+          const d = buf.getChannelData(0);
+          for(let i=0;i<d.length;i++) d[i]=(Math.random()*2-1);
+          const src = ctx.createBufferSource(); src.buffer=buf;
+          const hp = ctx.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=7000;
+          src.connect(hp); hp.connect(gain); gain.connect(ctx.destination);
+          src.start(); src.stop(ctx.currentTime+0.18);
+          nodes.push(src,hp,gain);
+          return nodes;
+        }
+      }
+    ]
+  },
+  forest: {
+    label: 'Forest Soundscape',
+    blurb: 'Bernie Krause\'s Acoustic Niche Hypothesis: animals in a healthy ecosystem evolve to occupy different frequency bands, creating a "biophonic symphony." Each species claims its acoustic territory — just like instruments in a mix.',
+    sources: [
+      {
+        id:'wind', label:'Wind / Earth', emoji:'💨', loopMs:3600,
+        fLow:20, fHigh:150, hLow:null, hHigh:null,
+        color:'#886644',
+        desc:'Infrasound and low rumble: wind, moving water, and seismic activity form the bass foundation of every landscape. 20–150 Hz. No animals "speak" here — it\'s the earth itself.',
+        synthesize(ctx) {
+          const nodes = [];
+          const gain = ctx.createGain();
+          gain.gain.setValueAtTime(0,ctx.currentTime);
+          gain.gain.linearRampToValueAtTime(0.4, ctx.currentTime+0.8);
+          gain.gain.setValueAtTime(0.4, ctx.currentTime+2.5);
+          gain.gain.linearRampToValueAtTime(0,ctx.currentTime+3.5);
+          const buf = ctx.createBuffer(1, ctx.sampleRate*3.5, ctx.sampleRate);
+          const d = buf.getChannelData(0);
+          for(let i=0;i<d.length;i++) d[i]=Math.random()*2-1;
+          const src = ctx.createBufferSource(); src.buffer=buf;
+          const lp = ctx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=80;
+          src.connect(lp); lp.connect(gain); gain.connect(ctx.destination);
+          src.start(); src.stop(ctx.currentTime+3.5);
+          nodes.push(src,lp,gain);
+          return nodes;
+        }
+      },
+      {
+        id:'wolf', label:'Large Mammals', emoji:'🐺', loopMs:4000,
+        fLow:150, fHigh:780, hLow:null, hHigh:null,
+        color:'#cc4433',
+        desc:'Wolves howl at 150–780 Hz; bears grunt around 200–600 Hz; deer calls at 400–700 Hz. Large mammals occupy the low-mid niche — just above the wind, well below the birds.',
+        synthesize(ctx) {
+          const nodes = [];
+          const gain = ctx.createGain();
+          gain.gain.setValueAtTime(0,ctx.currentTime);
+          gain.gain.linearRampToValueAtTime(0.45,ctx.currentTime+0.3);
+          gain.gain.setValueAtTime(0.45,ctx.currentTime+1.4);
+          gain.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+2.2);
+          const osc = ctx.createOscillator(); osc.type='sine';
+          osc.frequency.setValueAtTime(300,ctx.currentTime);
+          osc.frequency.linearRampToValueAtTime(520,ctx.currentTime+0.6);
+          osc.frequency.linearRampToValueAtTime(580,ctx.currentTime+1.0);
+          osc.frequency.linearRampToValueAtTime(300,ctx.currentTime+1.8);
+          const vib=ctx.createOscillator(); vib.frequency.value=3.5;
+          const vibG=ctx.createGain(); vibG.gain.value=8;
+          vib.connect(vibG); vibG.connect(osc.frequency);
+          osc.connect(gain); gain.connect(ctx.destination);
+          vib.start(); vib.stop(ctx.currentTime+2.2);
+          osc.start(); osc.stop(ctx.currentTime+2.2);
+          nodes.push(vib,vibG,osc,gain);
+          return nodes;
+        }
+      },
+      {
+        id:'frog', label:'Frogs / Toads', emoji:'🐸', loopMs:2800,
+        fLow:200, fHigh:3000, hLow:null, hHigh:null,
+        color:'#44bb44',
+        desc:'Frogs span 200–3000 Hz depending on species. They call at night in a lower range (500–1500 Hz) than most birds, avoiding the morning chorus competition — a classic niche partition.',
+        synthesize(ctx) {
+          const nodes = [];
+          const dur = 2.5;
+          let t = ctx.currentTime + 0.05;
+          const chirps = 5;
+          for(let i=0;i<chirps;i++){
+            const osc=ctx.createOscillator(); osc.type='sine';
+            const freq = 600 + Math.random()*300;
+            osc.frequency.setValueAtTime(freq,t);
+            osc.frequency.exponentialRampToValueAtTime(freq*0.85,t+0.08);
+            const g=ctx.createGain();
+            g.gain.setValueAtTime(0,t);
+            g.gain.linearRampToValueAtTime(0.45,t+0.01);
+            g.gain.exponentialRampToValueAtTime(0.001,t+0.09);
+            osc.connect(g); g.connect(ctx.destination);
+            osc.start(t); osc.stop(t+0.12);
+            nodes.push(osc,g);
+            t += 0.12 + Math.random()*0.35;
+          }
+          return nodes;
+        }
+      },
+      {
+        id:'bird_low', label:'Owls / Doves', emoji:'🦉', loopMs:3500,
+        fLow:500, fHigh:2000, hLow:null, hHigh:null,
+        color:'#cc8833',
+        desc:'Owls hoot in a low 500–1500 Hz range, well below the dawn chorus. Doves coo at 600–900 Hz. These low-register birds occupy the mid-frequency niche between frogs and songbirds.',
+        synthesize(ctx) {
+          const nodes = [];
+          let t = ctx.currentTime + 0.1;
+          [[700,0.12],[700,0.12],[560,0.45]].forEach(([f,gap])=>{
+            const osc=ctx.createOscillator(); osc.type='sine'; osc.frequency.value=f;
+            const g=ctx.createGain();
+            g.gain.setValueAtTime(0,t);
+            g.gain.linearRampToValueAtTime(0.38,t+0.06);
+            g.gain.exponentialRampToValueAtTime(0.001,t+0.35);
+            osc.connect(g); g.connect(ctx.destination);
+            osc.start(t); osc.stop(t+0.4);
+            nodes.push(osc,g);
+            t += 0.4+gap;
+          });
+          return nodes;
+        }
+      },
+      {
+        id:'bird_song', label:'Songbirds', emoji:'🐦', loopMs:2000,
+        fLow:1500, fHigh:8000, hLow:null, hHigh:null,
+        color:'#ffdd44',
+        desc:'Most songbirds (robins, warblers, thrushes) call at 1.5–8 kHz — the "sweet spot" of human hearing. They exploit the gap between the bass of frogs/mammals and the ultrasonic frequencies of insects.',
+        synthesize(ctx) {
+          const nodes = [];
+          let t = ctx.currentTime + 0.05;
+          const melody = [4000,5200,3800,6000,4400,5800,3600];
+          melody.forEach((f,i)=>{
+            const osc=ctx.createOscillator(); osc.type='sine';
+            osc.frequency.setValueAtTime(f,t);
+            osc.frequency.exponentialRampToValueAtTime(f*1.05,t+0.07);
+            const vib=ctx.createOscillator(); vib.frequency.value=8+i;
+            const vibG=ctx.createGain(); vibG.gain.value=f*0.015;
+            vib.connect(vibG); vibG.connect(osc.frequency);
+            const g=ctx.createGain();
+            g.gain.setValueAtTime(0,t);
+            g.gain.linearRampToValueAtTime(0.25,t+0.015);
+            g.gain.exponentialRampToValueAtTime(0.001,t+0.11);
+            osc.connect(g); g.connect(ctx.destination);
+            vib.start(t); vib.stop(t+0.12);
+            osc.start(t); osc.stop(t+0.12);
+            nodes.push(osc,vib,vibG,g);
+            t += 0.09 + Math.random()*0.08;
+          });
+          return nodes;
+        }
+      },
+      {
+        id:'cricket', label:'Crickets / Katydids', emoji:'🦗', loopMs:1600,
+        fLow:4000, fHigh:9000, hLow:null, hHigh:null,
+        color:'#88ff44',
+        desc:'Crickets stridulate (rub wings) at 4–9 kHz — above most bird calls. Katydids can reach 15 kHz. This high-frequency niche is entirely theirs at night, filling the acoustic space that songbirds vacate after dusk.',
+        synthesize(ctx) {
+          const nodes = [];
+          let t = ctx.currentTime;
+          const chirpRate = 0.025, chirpDur = 0.012;
+          for(let i=0;i<60;i++){
+            const osc=ctx.createOscillator(); osc.type='sine';
+            osc.frequency.value = 5000 + (i%3)*600;
+            const g=ctx.createGain();
+            g.gain.setValueAtTime(0,t);
+            g.gain.linearRampToValueAtTime(0.18,t+0.003);
+            g.gain.exponentialRampToValueAtTime(0.001,t+chirpDur);
+            osc.connect(g); g.connect(ctx.destination);
+            osc.start(t); osc.stop(t+chirpDur+0.001);
+            nodes.push(osc,g);
+            t += chirpRate;
+          }
+          return nodes;
+        }
+      },
+      {
+        id:'bat', label:'Bats (ultrasonic)', emoji:'🦇', loopMs:1500,
+        fLow:10000, fHigh:20000, hLow:null, hHigh:null,
+        color:'#cc88ff',
+        desc:'Bats echolocate at 10–120 kHz (mostly above human hearing). The audible "clicks" we hear at dusk (10–20 kHz) represent the very top of our perceptual range. They exploit a completely unoccupied acoustic niche.',
+        synthesize(ctx) {
+          const nodes = [];
+          let t = ctx.currentTime;
+          for(let i=0;i<12;i++){
+            const osc=ctx.createOscillator(); osc.type='sine';
+            osc.frequency.setValueAtTime(14000,t);
+            osc.frequency.exponentialRampToValueAtTime(10000,t+0.012);
+            const g=ctx.createGain();
+            g.gain.setValueAtTime(0,t);
+            g.gain.linearRampToValueAtTime(0.3,t+0.003);
+            g.gain.exponentialRampToValueAtTime(0.001,t+0.015);
+            osc.connect(g); g.connect(ctx.destination);
+            osc.start(t); osc.stop(t+0.018);
+            nodes.push(osc,g);
+            t += 0.08 + Math.random()*0.15;
+          }
+          return nodes;
+        }
+      }
+    ]
+  }
+};
+
+let sonicMode = 'band';
+let sonicView = 'rows';
+let sonicNodes = [];      // all live audio nodes
+let sonicTimers = [];     // setInterval IDs for looping
+let sonicInited = false;
+
+function setSonicMode(m) {
+  sonicMode = m;
+  sonicStopAll();
+  document.getElementById('sonic-band-btn').classList.toggle('primary', m==='band');
+  document.getElementById('sonic-band-btn').classList.toggle('active', m==='band');
+  document.getElementById('sonic-forest-btn').classList.toggle('primary', m==='forest');
+  document.getElementById('sonic-forest-btn').classList.toggle('active', m==='forest');
+  buildSonicSourceBtns();
+  drawSonicCanvas();
+  const data = SONIC_MODES_DATA[sonicMode];
+  document.getElementById('sonicInfo').innerHTML = `<strong>${data.label}:</strong> ${data.blurb}`;
+}
+
+function setSonicView(v) {
+  sonicView = v;
+  document.getElementById('sonic-view-rows').classList.toggle('active', v==='rows');
+  document.getElementById('sonic-view-overlay').classList.toggle('active', v==='overlay');
+  drawSonicCanvas();
+}
+
+function buildSonicSourceBtns() {
+  const container = document.getElementById('sonicSources');
+  container.innerHTML = '';
+  const sources = SONIC_MODES_DATA[sonicMode].sources;
+  sources.forEach(src => {
+    if (!('active' in src)) src.active = true;
+    const btn = document.createElement('button');
+    btn.className = 'sonic-src-btn ' + (src.active ? 'active' : 'inactive');
+    btn.id = `ssrc-${src.id}`;
+    btn.innerHTML = `<span class="src-dot" style="background:${src.color}"></span>${src.emoji} ${src.label}`;
+    btn.style.borderColor = src.active ? src.color : 'transparent';
+    btn.addEventListener('click', () => {
+      src.active = !src.active;
+      btn.classList.toggle('active', src.active);
+      btn.classList.toggle('inactive', !src.active);
+      btn.style.borderColor = src.active ? src.color : 'transparent';
+      drawSonicCanvas();
+      updateSonicInfo(src);
+    });
+    // Solo play on double-click
+    btn.addEventListener('dblclick', (e) => {
+      e.preventDefault();
+      sonicStopAll();
+      playSonicSourceOnce(src);
+      // replay once more after the sound ends
+      setTimeout(() => playSonicSourceOnce(src), (src.loopMs || 2000) * 0.85);
+      updateSonicInfo(src);
+    });
+    container.appendChild(btn);
+  });
+}
+
+function updateSonicInfo(src) {
+  document.getElementById('sonicInfo').innerHTML =
+    `<strong>${src.emoji} ${src.label}</strong> — ${src.desc}<br>
+    <span style="color:#aaa;font-size:0.78rem;font-family:monospace">
+      Fundamental: ${src.fLow.toLocaleString()} – ${src.fHigh.toLocaleString()} Hz
+      ${src.hLow ? ` &nbsp;|&nbsp; Harmonics/presence: ${src.hLow.toLocaleString()} – ${src.hHigh.toLocaleString()} Hz` : ''}
+    </span><br>
+    <em style="color:#aaa;font-size:0.77rem">Double-click the button to hear this source solo.</em>`;
+}
+
+function initSonicPanel() {
+  const canvas = document.getElementById('sonicCanvas');
+  const dw = canvas.parentElement.clientWidth - 2;
+  if (canvas.width !== Math.round(dw)) canvas.width = Math.round(dw);
+  buildSonicSourceBtns();
+  drawSonicCanvas();
+  const data = SONIC_MODES_DATA[sonicMode];
+  document.getElementById('sonicInfo').innerHTML = `<strong>${data.label}:</strong> ${data.blurb}`;
+}
+
+function drawSonicCanvas() {
+  const canvas = document.getElementById('sonicCanvas');
+  if (!canvas) return;
+  const W = canvas.width, H = canvas.height;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, W, H);
+
+  // Background
+  ctx.fillStyle = '#0d0d1a';
+  ctx.fillRect(0, 0, W, H);
+
+  const PAD_L = 14, PAD_R = 14, PAD_T = 36, PAD_B = 38;
+  const PW = W - PAD_L - PAD_R;
+
+  // Frequency axis labels
+  const freqLabels = [[20,'20'],[50,'50'],[100,'100'],[200,'200'],[500,'500'],
+    [1000,'1k'],[2000,'2k'],[5000,'5k'],[10000,'10k'],[20000,'20k']];
+  ctx.fillStyle = '#666688';
+  ctx.font = '9.5px monospace';
+  ctx.textAlign = 'center';
+  freqLabels.forEach(([f, label]) => {
+    const x = PAD_L + freqX(f, PW);
+    ctx.fillStyle = '#444466';
+    ctx.beginPath(); ctx.moveTo(x, PAD_T); ctx.lineTo(x, H - PAD_B); ctx.stroke();
+    ctx.fillStyle = '#666688';
+    ctx.fillText(label, x, H - PAD_B + 12);
+  });
+  // Hz label
+  ctx.fillStyle = '#444466';
+  ctx.font = '9px monospace';
+  ctx.textAlign = 'left';
+  ctx.fillText('← Hz (log scale)', PAD_L, H - PAD_B + 24);
+
+  // "Hearing range" colored zones
+  const zones = [
+    [20,   250,  '#1a1a2e', 'Sub-bass'],
+    [250,  500,  '#1a1e2e', 'Bass'],
+    [500,  2000, '#1a221e', 'Midrange'],
+    [2000, 6000, '#1e221a', 'High-mid'],
+    [6000, 20000,'#221a1a', 'Brilliance']
+  ];
+  zones.forEach(([fA, fB, col]) => {
+    const x1 = PAD_L + freqX(fA, PW), x2 = PAD_L + freqX(fB, PW);
+    ctx.fillStyle = col;
+    ctx.fillRect(x1, PAD_T, x2-x1, H - PAD_T - PAD_B);
+  });
+
+  const sources = SONIC_MODES_DATA[sonicMode].sources;
+
+  if (sonicView === 'rows') {
+    // Each source gets its own horizontal row
+    const rowH = (H - PAD_T - PAD_B - 4) / sources.length;
+    sources.forEach((src, i) => {
+      const y = PAD_T + 2 + i * rowH;
+      const alpha = src.active ? 1.0 : 0.22;
+
+      // Row background (subtle)
+      ctx.fillStyle = src.active ? `${src.color}18` : 'transparent';
+      ctx.fillRect(PAD_L, y, PW, rowH - 2);
+
+      // Harmonic/presence band (wide, faded)
+      if (src.hLow && src.hHigh) {
+        const x1 = PAD_L + freqX(src.hLow, PW);
+        const x2 = PAD_L + freqX(src.hHigh, PW);
+        const hGrad = ctx.createLinearGradient(x1, 0, x2, 0);
+        hGrad.addColorStop(0, `${src.color}${src.active ? '55' : '18'}`);
+        hGrad.addColorStop(1, `${src.color}00`);
+        ctx.fillStyle = hGrad;
+        ctx.beginPath();
+        ctx.roundRect(x1, y + rowH * 0.15, x2 - x1, rowH * 0.7, 4);
+        ctx.fill();
+      }
+
+      // Fundamental band (solid, filled)
+      const fx1 = PAD_L + freqX(src.fLow, PW);
+      const fx2 = PAD_L + freqX(src.fHigh, PW);
+      const bh = rowH * 0.65;
+      const by = y + (rowH - bh) / 2;
+      const grad = ctx.createLinearGradient(fx1, 0, fx2, 0);
+      grad.addColorStop(0, `${src.color}${src.active ? 'cc' : '30'}`);
+      grad.addColorStop(0.5, `${src.color}${src.active ? 'ff' : '44'}`);
+      grad.addColorStop(1, `${src.color}${src.active ? 'aa' : '20'}`);
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.roundRect(fx1, by, Math.max(fx2 - fx1, 4), bh, 5);
+      ctx.fill();
+
+      // Label
+      ctx.fillStyle = src.active ? '#ddddf0' : '#444466';
+      ctx.font = `${src.active ? '600 ' : ''}10px system-ui`;
+      ctx.textAlign = 'left';
+      const labelX = Math.min(fx1, PAD_L + 2);
+      ctx.fillText(`${src.emoji} ${src.label}`, PAD_L + 2, y + rowH / 2 + 4);
+
+      // Frequency range text on the bar (if wide enough)
+      const barW = fx2 - fx1;
+      if (barW > 60 && src.active) {
+        ctx.fillStyle = '#ffffff99';
+        ctx.font = '8px monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText(`${src.fLow >= 1000 ? (src.fLow/1000)+'k' : src.fLow}–${src.fHigh >= 1000 ? (src.fHigh/1000)+'k' : src.fHigh} Hz`,
+          fx1 + barW / 2, by + bh / 2 + 3);
+      }
+    });
+
+  } else {
+    // Overlay: all sources on same axis as stacked transparent bands
+    const bandH = (H - PAD_T - PAD_B) * 0.55;
+    const bandY = PAD_T + (H - PAD_T - PAD_B - bandH) / 2;
+    sources.forEach(src => {
+      if (!src.active) return;
+      const fx1 = PAD_L + freqX(src.fLow, PW);
+      const fx2 = PAD_L + freqX(src.fHigh, PW);
+      const grad = ctx.createLinearGradient(fx1, bandY, fx2, bandY);
+      grad.addColorStop(0, `${src.color}44`);
+      grad.addColorStop(0.5, `${src.color}cc`);
+      grad.addColorStop(1, `${src.color}44`);
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.roundRect(fx1, bandY, Math.max(fx2-fx1,4), bandH, 6);
+      ctx.fill();
+      // Harmonic tail
+      if (src.hLow && src.hHigh) {
+        const hx1 = PAD_L + freqX(src.hLow, PW);
+        const hx2 = PAD_L + freqX(src.hHigh, PW);
+        const hg = ctx.createLinearGradient(hx1, 0, hx2, 0);
+        hg.addColorStop(0, `${src.color}44`); hg.addColorStop(1, `${src.color}00`);
+        ctx.fillStyle = hg;
+        ctx.beginPath();
+        ctx.roundRect(hx1, bandY + bandH*0.15, hx2-hx1, bandH*0.7, 4);
+        ctx.fill();
+      }
+      // Small emoji label
+      ctx.font = '12px system-ui';
+      ctx.textAlign = 'center';
+      ctx.fillText(src.emoji, fx1 + (fx2 - fx1) / 2, bandY - 5);
+    });
+    // Legend
+    ctx.font = '10px system-ui';
+    ctx.textAlign = 'left';
+    let lx = PAD_L, ly = PAD_T - 18;
+    sources.filter(s => s.active).forEach(src => {
+      ctx.fillStyle = src.color;
+      ctx.fillRect(lx, ly - 7, 10, 8);
+      ctx.fillStyle = '#aaaacc';
+      ctx.fillText(src.label, lx + 13, ly);
+      lx += ctx.measureText(src.label).width + 26;
+      if (lx > W - 80) { lx = PAD_L; ly += 14; }
+    });
+  }
+
+  // Frequency zone labels (top)
+  ctx.font = '8px system-ui';
+  ctx.fillStyle = '#333355';
+  ctx.textAlign = 'center';
+  [['Sub', 20, 250], ['Bass', 250, 500], ['Mid', 500, 2000], ['Hi-Mid', 2000, 6000], ['Air', 6000, 20000]]
+    .forEach(([label, fA, fB]) => {
+      const mx = PAD_L + (freqX(fA, PW) + freqX(fB, PW)) / 2;
+      ctx.fillText(label, mx, PAD_T - 4);
+    });
+
+  // "You are here" for our note system — mark 261Hz (middle C)
+  const mcX = PAD_L + freqX(261.63, PW);
+  ctx.strokeStyle = '#6040cc55';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([3,3]);
+  ctx.beginPath(); ctx.moveTo(mcX, PAD_T); ctx.lineTo(mcX, H - PAD_B); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#6040cc88';
+  ctx.font = '8px monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText('C4 (0)', mcX, H - PAD_B + 24);
+}
+
+function playSonicSourceOnce(src) {
+  const ctx = getCtx();
+  try {
+    const nodes = src.synthesize(ctx);
+    sonicNodes.push(...nodes);
+  } catch(e) { console.warn('sonic synth error', src.id, e); }
+}
+
+function sonicPlayAll() {
+  sonicStopAll();
+  const sources = SONIC_MODES_DATA[sonicMode].sources.filter(s => s.active);
+  if (!sources.length) return;
+  sources.forEach(src => {
+    playSonicSourceOnce(src);
+    const loopMs = src.loopMs || 2000;
+    const tid = setInterval(() => playSonicSourceOnce(src), loopMs);
+    sonicTimers.push(tid);
+  });
+  const btn = document.getElementById('sonicPlayAllBtn');
+  if (btn) btn.textContent = '■ Stop';
+  btn.onclick = sonicStopAll;
+}
+
+function sonicStopAll() {
+  sonicTimers.forEach(t => clearInterval(t));
+  sonicTimers = [];
+  sonicNodes.forEach(n => { try { if (n.stop) n.stop(0); else if (n.disconnect) n.disconnect(); } catch(e){} });
+  sonicNodes = [];
+  const btn = document.getElementById('sonicPlayAllBtn');
+  if (btn) { btn.textContent = '▶ Play all active'; btn.onclick = sonicPlayAll; }
+}
+
+// ═══════════════════════════════════════════════════════════
+//  COMPARE TAB — 5-line vs 7-line staff
+// ═══════════════════════════════════════════════════════════
+const CMP_SCALES = {
+  major:      [0,2,4,5,7,9,11,12],
+  minor:      [0,2,3,5,7,8,10,12],
+  pentatonic: [0,2,4,7,9,12],
+  chromatic:  [0,1,2,3,4,5,6,7,8,9,10,11,12],
+  chord:      [0,4,7,12]
+};
+
+let cmpScale = 'major';
+let cmpHlit  = -1;
+let cmpAnimId = null, cmpPlaying = false, cmpAnimIdx = 0, cmpLastTime = 0;
+
+// Traditional 5-line staff note positions (staff lines at B3,D4,F4,A4,C5 = semitones 11,14,17,21,25 from C2)
+// We map our 0-12 range to treble clef positions:
+//   Middle C (0) = ledger line below staff
+//   D (2) = just below bottom staff line
+//   E (4) = bottom line
+//   F (5) = first space
+//   G (7) = second line
+//   A (9) = second space
+//   B (11) = third line
+//   C5 (12) = third space
+// Treble clef lines (bottom to top): E4, G4, B4, D5, F5 → semitones relative to middle C: 4, 7, 11, 14, 17
+// Spaces: F4, A4, C5, E5 → semitones: 5, 9, 12, 16
+// So for notes 0-12, Y positions on a 5-line staff (line/space index from bottom):
+// 0(C4)=−1 ledger, 1(C#)=−0.5 space below, 2(D)=0 space, 3(Eb)=0.5, 4(E)=1 line,
+// 5(F)=1.5 space, 6(F#)=1.75, 7(G)=2 line, 8(Ab)=2.5 space, 9(A)=3 line... wait
+// Standard treble clef: lines are E4 G4 B4 D5 F5 (line indices 1,2,3,4,5 from bottom)
+// Spaces are F4 A4 C5 E5 (space indices 1,2,3,4 from bottom)
+// Slot units from bottom staff line (E4=0):
+// C4(0)=-2, C#(1)=-1.5, D(2)=-1, Eb(3)=-0.5, E(4)=0, F(5)=0.5, F#(6)=0.75,
+// G(7)=1, Ab(8)=1.5, A(9)=2, Bb(10)=2.5, B(11)=3, C5(12)=3.5
+const TRAD_SLOTS = [-2, -1.5, -1, -0.5, 0, 0.5, 0.75, 1, 1.5, 2, 2.5, 3, 3.5];
+// Lines in slot units: 0,1,2,3,4 (E4,G4,B4,D5,F5)
+const TRAD_LINES = [0, 1, 2, 3, 4]; // slot units from bottom line
+
+function noteColorStr(n) {
+  const cls = ((n % 12) + 12) % 12;
+  return `hsl(${(cls*7%12)*30},78%,42%)`;
+}
+
+function initCompareCanvas() {
+  const canvas = document.getElementById('compareCanvas');
+  const dw = canvas.parentElement.clientWidth - 2;
+  if (canvas.width !== Math.round(dw)) canvas.width = Math.round(dw);
+  // On narrow screens, stack staves vertically → taller canvas
+  const mobile = dw < 520;
+  canvas.height = mobile ? 820 : 460;
+  // click/touch handler
+  function handleClick(e) {
+    e.preventDefault();
+    const rect = canvas.getBoundingClientRect();
+    const srcX = e.touches ? e.touches[0].clientX : e.clientX;
+    const srcY = e.touches ? e.touches[0].clientY : e.clientY;
+    const cx = (srcX - rect.left) * (canvas.width / rect.width);
+    const cy = (srcY - rect.top) * (canvas.height / rect.height);
+    const hit = cmpHitTest(cx, cy);
+    if (hit >= 0) { cmpHlit = (cmpHlit === hit) ? -1 : hit; cmpDraw(); }
+  }
+  canvas.onclick = handleClick;
+  canvas.ontouchend = handleClick;
+  cmpDraw();
+}
+
+function setCmpScale(key) {
+  cmpScale = key;
+  cmpStop();
+  cmpHlit = -1;
+  ['major','minor','pent','chrom','chord'].forEach(k => {
+    const el = document.getElementById(`cmp-${k}`);
+    if (el) el.classList.toggle('active', k === key || 'pentatonic' === key && k === 'pent' || 'chromatic' === key && k === 'chrom');
+  });
+  // fix active class properly
+  document.querySelectorAll('[id^="cmp-"]').forEach(b => b.classList.remove('active'));
+  const map = { major:'cmp-major', minor:'cmp-minor', pentatonic:'cmp-pent', chromatic:'cmp-chrom', chord:'cmp-chord' };
+  const el = document.getElementById(map[key]);
+  if (el) el.classList.add('active');
+  initCompareCanvas();
+}
+
+// Hit test: returns note index if click is near a note dot on either staff
+let _cmpDots = []; // [{n, x, y}] populated during draw
+function cmpHitTest(cx, cy) {
+  for (const d of _cmpDots) {
+    if (Math.hypot(cx - d.x, cy - d.y) < 16) return d.n;
+  }
+  return -1;
+}
+
+function cmpDraw() {
+  const canvas = document.getElementById('compareCanvas');
+  if (!canvas) return;
+  const W = canvas.width, H = canvas.height;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, W, H);
+
+  const notes = CMP_SCALES[cmpScale] || CMP_SCALES.major;
+  const mobile = W < 520;
+
+  if (mobile) {
+    // Stack vertically: traditional on top, 7-line on bottom
+    const PAD = 14;
+    const panelH = Math.floor(H / 2) - 6;
+    drawTradStaff(ctx, PAD, panelH, W - PAD * 2, notes, 0);
+    // horizontal divider
+    ctx.strokeStyle = '#e0e0f0'; ctx.lineWidth = 1; ctx.setLineDash([4,4]);
+    ctx.beginPath(); ctx.moveTo(PAD, H/2); ctx.lineTo(W - PAD, H/2); ctx.stroke();
+    ctx.setLineDash([]);
+    draw7LineStaff(ctx, PAD, panelH, W - PAD * 2, notes, Math.floor(H / 2) + 6);
+  } else {
+    // Side by side
+    const PAD = 24, MID = W / 2, GAP = 20;
+    const LW = MID - PAD - GAP / 2;
+    drawTradStaff(ctx, PAD, H, LW, notes, 0);
+    draw7LineStaff(ctx, MID + GAP / 2, H, LW, notes, 0);
+    // vertical divider
+    ctx.strokeStyle = '#e0e0f0'; ctx.lineWidth = 1; ctx.setLineDash([4,4]);
+    ctx.beginPath(); ctx.moveTo(MID, 16); ctx.lineTo(MID, H - 16); ctx.stroke();
+    ctx.setLineDash([]);
+  }
+
+  // note list
+  const names5 = ['C','C♯','D','E♭','E','F','F♯','G','A♭','A','B♭','B','C'];
+  const noteList = document.getElementById('cmpNoteList');
+  if (noteList) {
+    noteList.innerHTML = notes.map(n =>
+      `<span style="display:inline-block;margin:0 4px;padding:2px 7px;border-radius:5px;
+        background:${noteColorStr(n)}22;border:1px solid ${noteColorStr(n)}55;
+        color:${noteColorStr(n)};font-weight:${cmpHlit===n?700:400};
+        cursor:pointer" onclick="cmpHlit=${cmpHlit===n?-1:n};cmpDraw()">${n} <span style="opacity:.7;font-size:.85em">${names5[n]}</span></span>`
+    ).join('');
+  }
+}
+
+function drawTradStaff(ctx, x0, H, W, notes, yOffset=0) {
+  const SLOT_H = 11; // pixels per slot unit
+  const BOT_Y  = yOffset + H - 60; // y of bottom staff line (E4 = slot 0)
+  const TOP_Y  = BOT_Y - 4 * SLOT_H * 2; // slot 4 * 2 slot-units per line (each line = 2 slots: line+space)
+  // Actually: 5 lines, each separated by 1 slot unit × SLOT_H
+  // Line i (0..4) is at y = BOT_Y - i * SLOT_H * 2? No — each step up the staff = 1 slot unit
+  // Let's say lineY(slot) = BOT_Y - slot * SLOT_H
+
+  function slotY(s) { return BOT_Y - s * SLOT_H; }
+
+  // Title
+  ctx.fillStyle = '#9090bb';
+  ctx.font = '700 12px system-ui';
+  ctx.textAlign = 'center';
+  ctx.fillText('Traditional 5-Line Staff', x0 + W / 2, yOffset + 20);
+  ctx.font = '11px system-ui';
+  ctx.fillStyle = '#bbb';
+  ctx.fillText('(Treble clef, Middle C to C5)', x0 + W / 2, yOffset + 34);
+
+  // Draw 5 staff lines
+  ctx.strokeStyle = '#9090cc';
+  ctx.lineWidth = 1.2;
+  ctx.setLineDash([]);
+  for (let i = 0; i < 5; i++) {
+    const y = slotY(i * 2); // lines at slots 0,2,4,6,8 (E,G,B,D,F)
+    ctx.beginPath(); ctx.moveTo(x0 + 8, y); ctx.lineTo(x0 + W - 8, y); ctx.stroke();
+  }
+
+  // Treble clef symbol
+  ctx.fillStyle = '#aaaacc';
+  ctx.font = '52px Georgia,serif';
+  ctx.textAlign = 'left';
+  ctx.fillText('𝄞', x0 + 10, slotY(1) + 18);
+
+  // Note start X
+  const noteX0 = x0 + 54;
+  const noteSpacing = (W - 62) / Math.max(notes.length, 1);
+
+  _cmpDots = _cmpDots.filter(d => d.staff !== 'trad'); // clear old trad dots
+
+  // Draw notes
+  notes.forEach((n, i) => {
+    const slot = TRAD_SLOTS[n]; // slot units from bottom line (E4)
+    const ny = slotY(slot * 2); // slot*2 because our slot units are "half-slot" (each line/space = 1)
+    // Actually TRAD_SLOTS are in half-steps of staff position: let me recalculate
+    // TRAD_SLOTS[n] is the "diatonic position" above E4 (bottom line)
+    // E4=0, F4=0.5, G4=1, A4=1.5, B4=2, C5=2.5, D5=3, E5=3.5... but we only go to C5(12)
+    // slotY maps: 1 slot unit = SLOT_H pixels
+    // So the Y for note n is: BOT_Y - TRAD_SLOTS[n] * SLOT_H * 2
+    // Hmm, let me simplify: each staff position (line OR space) = SLOT_H pixels vertically
+    const y = BOT_Y - TRAD_SLOTS[n] * SLOT_H * 2;
+    const nx = noteX0 + i * noteSpacing;
+    const col = noteColorStr(n);
+    const isHlit = cmpHlit === n;
+
+    // Ledger line for middle C (slot = -2, below staff)
+    if (TRAD_SLOTS[n] < 0) {
+      ctx.strokeStyle = '#ccccdd';
+      ctx.lineWidth = 1.3;
+      ctx.beginPath(); ctx.moveTo(nx - 10, y); ctx.lineTo(nx + 10, y); ctx.stroke();
+      // Also draw partial ledger if between C and E
+      if (TRAD_SLOTS[n] < -1) {
+        const y2 = BOT_Y - (-1) * SLOT_H * 2;
+        ctx.beginPath(); ctx.moveTo(nx - 8, y2); ctx.lineTo(nx + 8, y2); ctx.stroke();
+      }
+    }
+    // Ledger above staff (above F5 = slot 4)
+    if (TRAD_SLOTS[n] > 4) {
+      ctx.strokeStyle = '#ccccdd'; ctx.lineWidth = 1.3;
+      ctx.beginPath(); ctx.moveTo(nx - 10, y); ctx.lineTo(nx + 10, y); ctx.stroke();
+    }
+
+    // Note dot
+    ctx.beginPath();
+    ctx.ellipse(nx, y, 7, 5.2, -0.32, 0, Math.PI * 2);
+    ctx.fillStyle = isHlit ? '#c060ff' : col;
+    ctx.fill();
+    if (isHlit) { ctx.strokeStyle = '#8030cc'; ctx.lineWidth = 1.5; ctx.stroke(); }
+
+    // Stem
+    ctx.strokeStyle = isHlit ? '#8030cc' : col;
+    ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    ctx.moveTo(nx + 6.5, y); ctx.lineTo(nx + 6.5, y - SLOT_H * 6);
+    ctx.stroke();
+
+    // Note number label
+    ctx.fillStyle = isHlit ? '#8030cc' : '#aaa';
+    ctx.font = isHlit ? '700 10px monospace' : '10px monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText(String(n), nx, y + SLOT_H * 4.2);
+
+    // Register for hit test
+    _cmpDots.push({ n, x: nx, y, staff: 'trad' });
+  });
+}
+
+function draw7LineStaff(ctx, x0, H, W, notes, yOffset=0) {
+  // 7-line staff: lines at positions 0,2,4,6,8,10,12 (C,D,E,G,A,B,C)
+  // Wait — the 7-line staff in this app has lines at even numbers and dots at odd numbers?
+  // Actually from the drawLines() function: lines drawn for n % 2 === 0 → positions 0,2,4,6,8,10,12 are LINES
+  // And odd positions 1,3,5,7,9,11 are in SPACES (represented as gaps between lines)
+  // But the original 7-line has 4 solid + 3 dotted lines. Let me check:
+  // From drawLines: lines at 0,2,4,...12 all drawn. Some are solid, some dotted.
+  // Actually re-reading: lines drawn every 2 steps. Dotted lines for odd? No...
+  // The 7 lines of the staff correspond to 7 note positions. With 12 semitones in an octave,
+  // not all 12 can be on lines — that would be 13 lines.
+  // The app's 7 lines are at specific positions. Let me re-check drawLines more carefully.
+
+  // From the code: for (let n = staffRange.min; n <= staffRange.max; n += 2) → draws line at every EVEN position
+  // staffRange.min=0, max=12 → lines at 0,2,4,6,8,10,12 = 7 lines. Solid lines.
+  // Odd positions (1,3,5,7,9,11) sit in the spaces between lines.
+
+  // So: 7 solid lines at positions 0,2,4,6,8,10,12
+  // Notes at odd positions appear in spaces between those lines (like traditional staff)
+  // This is the 7-line staff!
+
+  const LINE_SPACING = 17; // pixels between adjacent staff lines
+  // Total height used: 6 gaps * LINE_SPACING
+  const BOT_Y = yOffset + H - 55;
+  const TOP_Y = BOT_Y - 6 * LINE_SPACING; // line 0 at BOT_Y, line 12 at TOP_Y
+
+  function posY(n) { return BOT_Y - (n / 12) * 6 * LINE_SPACING; }
+  // Lines at 0,2,4,6,8,10,12 → even positions
+  // Spaces for 1,3,5,7,9,11 → at posY(n)
+
+  // Title
+  ctx.fillStyle = '#7050bb';
+  ctx.font = '700 12px system-ui';
+  ctx.textAlign = 'center';
+  ctx.fillText('7-Line Staff (this app)', x0 + W / 2, yOffset + 20);
+  ctx.font = '11px system-ui';
+  ctx.fillStyle = '#bbb';
+  ctx.fillText('(All 12 semitones, no accidentals)', x0 + W / 2, yOffset + 34);
+
+  // Draw 7 staff lines
+  for (let p = 0; p <= 12; p += 2) {
+    const y = posY(p);
+    ctx.strokeStyle = '#9090cc';
+    ctx.lineWidth = 1.2;
+    ctx.setLineDash([]);
+    ctx.beginPath(); ctx.moveTo(x0 + 8, y); ctx.lineTo(x0 + W - 8, y); ctx.stroke();
+    // position label at left
+    ctx.fillStyle = '#ccccdd';
+    ctx.font = '8.5px monospace';
+    ctx.textAlign = 'right';
+    ctx.fillText(String(p), x0 + 6, y + 3);
+  }
+  // Draw dotted "guide" lines at odd positions to help reading
+  for (let p = 1; p <= 11; p += 2) {
+    const y = posY(p);
+    ctx.strokeStyle = '#ddddf0';
+    ctx.lineWidth = 0.8;
+    ctx.setLineDash([2, 4]);
+    ctx.beginPath(); ctx.moveTo(x0 + 8, y); ctx.lineTo(x0 + W - 8, y); ctx.stroke();
+  }
+  ctx.setLineDash([]);
+
+  // "7L" clef label
+  ctx.fillStyle = '#aaaacc';
+  ctx.font = 'italic 14px Georgia,serif';
+  ctx.textAlign = 'left';
+  ctx.fillText('7L', x0 + 10, (TOP_Y + BOT_Y) / 2 + 5);
+
+  // Note start X
+  const noteX0 = x0 + 44;
+  const noteSpacing = (W - 52) / Math.max(notes.length, 1);
+
+  _cmpDots = _cmpDots.filter(d => d.staff !== '7l');
+
+  // Draw notes
+  notes.forEach((n, i) => {
+    const y = posY(n);
+    const nx = noteX0 + i * noteSpacing;
+    const col = noteColorStr(n);
+    const isHlit = cmpHlit === n;
+
+    // Note dot
+    ctx.beginPath();
+    ctx.ellipse(nx, y, 7, 5.2, -0.32, 0, Math.PI * 2);
+    ctx.fillStyle = isHlit ? '#c060ff' : col;
+    ctx.fill();
+    if (isHlit) { ctx.strokeStyle = '#8030cc'; ctx.lineWidth = 1.5; ctx.stroke(); }
+
+    // Stem
+    ctx.strokeStyle = isHlit ? '#8030cc' : col;
+    ctx.lineWidth = 1.2;
+    const stemDir = n <= 6 ? -1 : 1; // stem up for lower notes
+    ctx.beginPath();
+    ctx.moveTo(nx + 6.5 * stemDir, y);
+    ctx.lineTo(nx + 6.5 * stemDir, y - LINE_SPACING * 3 * stemDir);
+    ctx.stroke();
+
+    // Number label (above or below note)
+    ctx.fillStyle = isHlit ? '#8030cc' : '#aaa';
+    ctx.font = isHlit ? '700 10px monospace' : '10px monospace';
+    ctx.textAlign = 'center';
+    const labelY = stemDir < 0 ? y + 16 : y - LINE_SPACING * 3 - 5;
+    ctx.fillText(String(n), nx, labelY);
+
+    _cmpDots.push({ n, x: nx, y, staff: '7l' });
+  });
+}
+
+// animate through notes one at a time
+function cmpPlay() {
+  const notes = CMP_SCALES[cmpScale] || CMP_SCALES.major;
+  cmpStop();
+  cmpPlaying = true;
+  cmpAnimIdx = 0;
+  document.getElementById('cmpPlayBtn').disabled = true;
+  function step() {
+    if (!cmpPlaying || cmpAnimIdx >= notes.length) {
+      cmpStop(); return;
+    }
+    const n = notes[cmpAnimIdx];
+    cmpHlit = n; cmpDraw();
+    playNote(n, 0.6);
+    cmpAnimIdx++;
+    cmpAnimId = setTimeout(step, 500);
+  }
+  step();
+}
+function cmpStop() {
+  cmpPlaying = false;
+  if (cmpAnimId) { clearTimeout(cmpAnimId); cmpAnimId = null; }
+  cmpHlit = -1;
+  const btn = document.getElementById('cmpPlayBtn');
+  if (btn) btn.disabled = false;
+  cmpDraw();
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -3685,7 +4978,7 @@ function histCloseAll() {
 }
 
 function histPlayDemo(eraId) {
-  const ctx = getAudioCtx();
+  const ctx = getCtx();
   const demos = {
     monophony: [0, 2, 4, 5, 7, 9, 11, 12],
     octave:    [0, 12, null, 0, 12],
